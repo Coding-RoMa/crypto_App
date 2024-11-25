@@ -6,7 +6,6 @@ from datetime import date
 from patterns import patterns
 from ta.utils import dropna
 from ta.volatility import BollingerBands
-import numpy as np  # Import NumPy
 
 st.title("Market Dashboard Application")
 st.sidebar.header("User Input")
@@ -20,7 +19,7 @@ def get_input():
 def get_data(symbol, start_date, end_date):
     symbol = symbol.upper()
     if symbol:
-        df = yf.download(symbol, start=start_date, end=end_date)
+        df = yf.download(symbol, start=start_date, end=end-date)
     else:
         df = pd.DataFrame(columns=['Date', 'Close', 'Open', 'Volume', 'Adj Close'])
     return df
@@ -32,10 +31,10 @@ if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
     indicator_bb = BollingerBands(close=df["Adj Close"], window=20, window_dev=2)
     
-    # Flatten the arrays before creating pandas.Series
-    df['bb_mavg'] = pd.Series(indicator_bb.bollinger_mavg().flatten(), index=df.index)
-    df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().flatten(), index=df.index)
-    df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().flatten(), index=df.index)
+    # Ensure the output is 1-dimensional
+    df['bb_mavg'] = pd.Series(indicator_bb.bollinger_mavg().values.flatten(), index=df.index)
+    df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().values.flatten(), index=df.index)
+    df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().values.flatten(), index=df.index)
 
 st.subheader("Historical Prices")
 st.write(df)
