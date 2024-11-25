@@ -31,10 +31,10 @@ if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
     indicator_bb = BollingerBands(close=df["Adj Close"], window=20, window_dev=2)
     
-    # Ensure the output is 1-dimensional
-    df['bb_mavg'] = pd.Series(indicator_bb.bollinger_mavg().values.flatten(), index=df.index)
-    df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().values.flatten(), index=df.index)
-    df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().values.flatten(), index=df.index)
+    # Use .squeeze() to ensure the output is 1-dimensional
+    df['bb_mavg'] = pd.Series(indicator_bb.bollinger_mavg().squeeze(), index=df.index)
+    df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().squeeze(), index=df.index)
+    df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().squeeze(), index=df.index)
 
 st.subheader("Historical Prices")
 st.write(df)
