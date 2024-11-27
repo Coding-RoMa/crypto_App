@@ -29,12 +29,31 @@ df = get_data(symbol, start_date, end_date)
 
 if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
-    indicator_bb = BollingerBands(close=df["Adj Close"], window=20, window_dev=2)
+    close_prices = df["Adj Close"].squeeze() # added this line
+
+    indicator_bb = BollingerBands(close=close_prices, window=20, window_dev=2)
     
     # Use .squeeze() to ensure the output is 1-dimensional
-    df['bb_mavg'] = pd.Series(indicator_bb.bollinger_mavg().squeeze(), index=df.index)
-    df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().squeeze(), index=df.index)
-    df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().squeeze(), index=df.index)
+    #df['bb_mavg'] = pd.Series(indicator_bb.bollinger_mavg().squeeze(), index=df.index)
+    #df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().squeeze(), index=df.index)
+    #df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().squeeze(), index=df.index)
+
+    # Convert to 1-dimensional array 
+    #df['bb_mavg'] = pd.Series(indicator_bb.bollinger_mavg().values.ravel(), index=df.index) 
+    #df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().values.ravel(), index=df.index) 
+    #df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().values.ravel(), index=df.index)
+    # Add Bollinger Bands features to the original DataFrame (df)
+    df['bb_bbm'] = indicator_bb.bollinger_mavg()
+    df['bb_bbh'] = indicator_bb.bollinger_hband()
+    df['bb_bbl'] = indicator_bb.bollinger_lband()
+
+    # Add Bollinger Band high indicator
+    df['bb_bbhi'] = indicator_bb.bollinger_hband_indicator()
+
+    # Add Bollinger Band low indicator
+    df['bb_bbli'] = indicator_bb.bollinger_lband_indicator()
+
+
 
 st.subheader("Historical Prices")
 st.write(df)
