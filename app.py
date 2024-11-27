@@ -55,7 +55,7 @@ if not df.empty and 'Adj Close' in df.columns:
 
     # Rename the column at position 5 (index 4)
     #df.rename(columns={df.columns[6]: "Bollinger Bands"}, inplace=True)
-"""
+
     # Add MultiIndex for column grouping
     columns = [
 
@@ -73,7 +73,7 @@ if not df.empty and 'Adj Close' in df.columns:
     ]
     df.columns = pd.MultiIndex.from_tuples(columns)
 
-"""
+
 
 
 
