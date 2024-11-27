@@ -58,6 +58,9 @@ if not df.empty and 'Adj Close' in df.columns:
 """
     # Add MultiIndex for column grouping
     columns = [
+
+        ("Symbol", "Adj Close"), 
+        ("Symbol", "Close"), 
         ("Price Data", "High"),
         ("Price Data", "Low"),
         ("Price Data", "Open"),
