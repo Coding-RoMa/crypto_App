@@ -92,7 +92,8 @@ st.subheader("Data Statistics")
 st.write(df.describe())
 
 st.subheader("Historical Price Chart - Adjusted Close Price")
-st.line_chart(df['Adj Close'])
+#st.line_chart(df['Adj Close'])
+st.line_chart(df[['Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger Bands_High', 'Bollinger Bands_Low']])
 
 st.subheader("Volume")
-st.bar_chart(df['Volume'])
+st.bar_chart(df['Price Data_Volume'])
