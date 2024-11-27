@@ -53,6 +53,16 @@ if not df.empty and 'Adj Close' in df.columns:
     # Add Bollinger Band low indicator
     df['bb_bbli'] = indicator_bb.bollinger_lband_indicator()
 
+
+    # Rename columns for better labels
+    df.rename(columns={
+        'bb_bbm': 'Bollinger Middle Band',
+        'bb_bbh': 'Bollinger Upper Band',
+        'bb_bbl': 'Bollinger Lower Band',
+        'bb_bbhi': 'Bollinger High Indicator',
+        'bb_bbli': 'Bollinger Low Indicator'
+    }, inplace=True)
+
 """
     # Add column labels to describe the data (as a separate mapping or row)
     column_labels = {
@@ -67,6 +77,8 @@ if not df.empty and 'Adj Close' in df.columns:
     labels_row = pd.DataFrame([column_labels], index=["Column Labels"])
     df = pd.concat([labels_row, df], axis=0)
 """
+
+
 
 
 st.subheader("Historical Prices")
