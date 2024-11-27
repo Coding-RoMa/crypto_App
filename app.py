@@ -43,7 +43,7 @@ if not df.empty and 'Adj Close' in df.columns:
     #df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().values.ravel(), index=df.index) 
     #df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().values.ravel(), index=df.index)
     # Add Bollinger Bands features to the original DataFrame (df)
-    df['bb_bbm'] = ("Mid band", indicator_bb.bollinger_mavg())
+    df['bb_bbm'] = (indicator_bb.bollinger_mavg()
     df['bb_bbh'] = indicator_bb.bollinger_hband()
     df['bb_bbl'] = indicator_bb.bollinger_lband()
 
