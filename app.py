@@ -56,22 +56,26 @@ if not df.empty and 'Adj Close' in df.columns:
     # Rename the column at position 5 (index 4)
     #df.rename(columns={df.columns[6]: "Bollinger Bands"}, inplace=True)
 
-    # Add MultiIndex for column grouping
+# Define hierarchical column labels
     columns = [
-
-        ("Adj Close"), 
-        ("Close"), 
-        ("High"),
-        ("Low"),
-        ("Open"),
-        ("Volume"),
-        ("Middle"),
-        ("High"),
-        ("Low"),
-        ("High Indicator"),
-        ("Low Indicator"),
+        ("Price Data", "Date"),
+        ("Price Data", "Adj Close"),
+        ("Price Data", "High"),
+        ("Price Data", "Low"),
+        ("Price Data", "Open"),
+        ("Price Data", "Volume"),
+        ("Bollinger Bands", "Middle"),
+        ("Bollinger Bands", "High"),
+        ("Bollinger Bands", "Low"),
+        ("Bollinger Bands", "High Indicator"),
+        ("Bollinger Bands", "Low Indicator"),
     ]
+
+    # Assign the MultiIndex to the DataFrame
     df.columns = pd.MultiIndex.from_tuples(columns)
+
+    # Flatten the multi-level columns to a single level
+    df.columns = df.columns.get_level_values(1)
 
 
 
