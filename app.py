@@ -57,6 +57,7 @@ if not df.empty and 'Adj Close' in df.columns:
     #df.rename(columns={df.columns[6]: "Bollinger Bands"}, inplace=True)
 
 # Define hierarchical column labels
+    # Define hierarchical column labels
     columns = [
         ("Price Data", "Date"),
         ("Price Data", "Adj Close"),
@@ -71,11 +72,12 @@ if not df.empty and 'Adj Close' in df.columns:
         ("Bollinger Bands", "Low Indicator"),
     ]
 
-    # Assign the MultiIndex to the DataFrame
+# Assign the MultiIndex
     df.columns = pd.MultiIndex.from_tuples(columns)
 
-    # Flatten the multi-level columns to a single level
-    df.columns = df.columns.get_level_values(1)
+# Flatten the multi-level columns to a single level with unique names
+    df.columns = [f"{level_0}_{level_1}" if level_0 else level_1 for level_0, level_1 in df.columns]
+
 
 
 
