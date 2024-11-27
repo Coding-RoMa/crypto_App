@@ -21,7 +21,7 @@ def get_data(symbol, start_date, end_date):
     if symbol:
         df = yf.download(symbol, start=start_date, end=end_date)
     else:
-        df = pd.DataFrame(columns=['Date', 'Close', 'Open', 'Volume', 'Adj Close', 'Bollinger Bands'])
+        df = pd.DataFrame(columns=['Date', 'Close', 'Open', 'Volume', 'Adj Close'])
     return df
 
 symbol, start_date, end_date = get_input()
