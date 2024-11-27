@@ -59,17 +59,17 @@ if not df.empty and 'Adj Close' in df.columns:
     # Add MultiIndex for column grouping
     columns = [
 
-        ("Symbol", "Adj Close"), 
-        ("Symbol", "Close"), 
-        ("Price Data", "High"),
-        ("Price Data", "Low"),
-        ("Price Data", "Open"),
-        ("Price Data", "Volume"),
-        ("Bollinger Bands", "Middle"),
-        ("Bollinger Bands", "High"),
-        ("Bollinger Bands", "Low"),
-        ("Bollinger Bands", "High Indicator"),
-        ("Bollinger Bands", "Low Indicator"),
+        ("Adj Close"), 
+        ("Close"), 
+        ("High"),
+        ("Low"),
+        ("Open"),
+        ("Volume"),
+        ("Middle"),
+        ("High"),
+        ("Low"),
+        ("High Indicator"),
+        ("Low Indicator"),
     ]
     df.columns = pd.MultiIndex.from_tuples(columns)
 
