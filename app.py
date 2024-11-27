@@ -54,7 +54,7 @@ if not df.empty and 'Adj Close' in df.columns:
     df['bb_bbli'] = indicator_bb.bollinger_lband_indicator()
 
     # Rename the column at position 5 (index 4)
-    df.columns.values[6] = "Bollinger Bands"
+df.columns.values[6] = "Bollinger Bands"
 
 
 
