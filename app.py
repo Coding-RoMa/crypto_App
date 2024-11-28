@@ -97,3 +97,80 @@ st.line_chart(df[['Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger B
 
 st.subheader("Volume")
 st.bar_chart(df['Price Data_Volume'])
+
+
+
+
+
+
+
+
+
+import plotly.graph_objects as go
+import streamlit as st
+
+# Add a Plotly chart for combined line and bar plot
+st.subheader("Historical Price Chart with Volume and Bollinger Bands")
+
+# Create a figure
+fig = go.Figure()
+
+# Add Adjusted Close Price as a line
+fig.add_trace(go.Scatter(
+    x=df.index, 
+    y=df['Price Data_Adj Close'], 
+    mode='lines', 
+    name='Adj Close',
+    line=dict(color='blue')
+))
+
+# Add Bollinger Bands (Middle, High, Low) as lines
+fig.add_trace(go.Scatter(
+    x=df.index, 
+    y=df['Bollinger Bands_Middle'], 
+    mode='lines', 
+    name='Bollinger Middle',
+    line=dict(color='orange')
+))
+fig.add_trace(go.Scatter(
+    x=df.index, 
+    y=df['Bollinger Bands_High'], 
+    mode='lines', 
+    name='Bollinger High',
+    line=dict(color='green')
+))
+fig.add_trace(go.Scatter(
+    x=df.index, 
+    y=df['Bollinger Bands_Low'], 
+    mode='lines', 
+    name='Bollinger Low',
+    line=dict(color='red')
+))
+
+# Add Volume as a bar chart (secondary Y-axis)
+fig.add_trace(go.Bar(
+    x=df.index, 
+    y=df['Price Data_Volume'], 
+    name='Volume',
+    marker_color='gray',
+    opacity=0.6
+))
+
+# Update layout for dual-axis visualization
+fig.update_layout(
+    title='Adjusted Close Price, Bollinger Bands, and Volume',
+    yaxis=dict(title='Price'),
+    yaxis2=dict(
+        title='Volume',
+        overlaying='y',
+        side='right'
+    ),
+    xaxis=dict(title='Date'),
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    height=600,
+    width=1000
+)
+
+# Display the combined chart
+st.plotly_chart(fig)
+
