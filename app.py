@@ -31,6 +31,8 @@ if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
     close_prices = df["Adj Close"].squeeze() # added this line
 
+
+    # From here - BOLLINGER BANDS
     indicator_bb = BollingerBands(close=close_prices, window=20, window_dev=2)
     
     # Use .squeeze() to ensure the output is 1-dimensional
@@ -72,6 +74,12 @@ if not df.empty and 'Adj Close' in df.columns:
         ("Bollinger Bands", "Low Indicator"),
     ]
 
+
+
+
+
+    
+
 # Assign the MultiIndex
     df.columns = pd.MultiIndex.from_tuples(columns)
 
@@ -97,6 +105,8 @@ st.line_chart(df[['Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger B
 
 st.subheader("Volume")
 st.bar_chart(df['Price Data_Volume'])
+
+
 
 
 
