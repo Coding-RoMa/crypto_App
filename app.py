@@ -103,13 +103,11 @@ st.bar_chart(df['Price Data_Volume'])
 
 
 
-
-
+#############################################
 
 import plotly.graph_objects as go
 import streamlit as st
 
-# Add a Plotly chart for combined line and bar plot
 st.subheader("Historical Price Chart with Volume and Bollinger Bands")
 
 # Create a figure
@@ -153,19 +151,24 @@ fig.add_trace(go.Bar(
     y=df['Price Data_Volume'], 
     name='Volume',
     marker_color='gray',
-    opacity=0.6
+    opacity=0.6,
+    yaxis='y2'  # Use secondary Y-axis for volume
 ))
 
 # Update layout for dual-axis visualization
 fig.update_layout(
     title='Adjusted Close Price, Bollinger Bands, and Volume',
-    yaxis=dict(title='Price'),
+    xaxis=dict(title='Date'),
+    yaxis=dict(
+        title='Price',
+        showgrid=True,
+        zeroline=True
+    ),
     yaxis2=dict(
         title='Volume',
-        overlaying='y',
-        side='right'
+        overlaying='y',  # Overlay volume axis on the same plot
+        side='right'     # Display volume axis on the right side
     ),
-    xaxis=dict(title='Date'),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     height=600,
     width=1000
@@ -173,4 +176,3 @@ fig.update_layout(
 
 # Display the combined chart
 st.plotly_chart(fig)
-
