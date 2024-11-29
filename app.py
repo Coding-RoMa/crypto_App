@@ -3,9 +3,9 @@ import yfinance as yf
 import streamlit as st
 import plotly.graph_objects as go
 from datetime import date
-from patterns import patterns
 from ta.utils import dropna
 from ta.volatility import BollingerBands
+from ta.volume import AccDistIndexIndicator  # Import for ADI
 
 st.title("Market Dashboard Application")
 st.sidebar.header("User Input")
@@ -29,37 +29,27 @@ df = get_data(symbol, start_date, end_date)
 
 if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
-    close_prices = df["Adj Close"].squeeze() # added this line
+    close_prices = df["Adj Close"].squeeze()
 
-
-    # From here - BOLLINGER BANDS
+    # --------------------- BOLLINGER BANDS -----------------------
     indicator_bb = BollingerBands(close=close_prices, window=20, window_dev=2)
-    
-    # Use .squeeze() to ensure the output is 1-dimensional
-    #df['bb_mavg'] = pd.Series(indicator_bb.bollinger_mavg().squeeze(), index=df.index)
-    #df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().squeeze(), index=df.index)
-    #df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().squeeze(), index=df.index)
+    df['bb_bbm'] = indicator_bb.bollinger_mavg()  # Middle Band
+    df['bb_bbh'] = indicator_bb.bollinger_hband()  # Upper Band
+    df['bb_bbl'] = indicator_bb.bollinger_lband()  # Lower Band
+    df['bb_bbhi'] = indicator_bb.bollinger_hband_indicator()  # High Indicator
+    df['bb_bbli'] = indicator_bb.bollinger_lband_indicator()  # Low Indicator
 
-    # Convert to 1-dimensional array 
-    #df['bb_mavg'] = pd.Series(indicator_bb.bollinger_mavg().values.ravel(), index=df.index) 
-    #df['bb_high'] = pd.Series(indicator_bb.bollinger_hband().values.ravel(), index=df.index) 
-    #df['bb_low'] = pd.Series(indicator_bb.bollinger_lband().values.ravel(), index=df.index)
-    # Add Bollinger Bands features to the original DataFrame (df)
-    df['bb_bbm'] = indicator_bb.bollinger_mavg()
-    df['bb_bbh'] = indicator_bb.bollinger_hband()
-    df['bb_bbl'] = indicator_bb.bollinger_lband()
+    # --------------------- ADI (Accumulation/Distribution Index) -----------------------
+    adi_indicator = AccDistIndexIndicator(
+        high=df['High'],
+        low=df['Low'],
+        close=df['Adj Close'],  # Use 'Adj Close' for consistency
+        volume=df['Volume'],
+        fillna=True  # Fill NaN values
+    )
+    df['ADI'] = adi_indicator.acc_dist_index()  # Add ADI column to DataFrame
 
-    # Add Bollinger Band high indicator
-    df['bb_bbhi'] = indicator_bb.bollinger_hband_indicator()
-
-    # Add Bollinger Band low indicator
-    df['bb_bbli'] = indicator_bb.bollinger_lband_indicator()
-
-    # Rename the column at position 5 (index 4)
-    #df.rename(columns={df.columns[6]: "Bollinger Bands"}, inplace=True)
-
-# Define hierarchical column labels
-    # Define hierarchical column labels
+    # --------------------- COLUMN RENAMING -----------------------
     columns = [
         ("Price Data", "Date"),
         ("Price Data", "Adj Close"),
@@ -72,102 +62,93 @@ if not df.empty and 'Adj Close' in df.columns:
         ("Bollinger Bands", "Low"),
         ("Bollinger Bands", "High Indicator"),
         ("Bollinger Bands", "Low Indicator"),
+        ("Indicators", "ADI"),  # Add ADI to columns
     ]
 
-
-
-
-
-    
-
-# Assign the MultiIndex
     df.columns = pd.MultiIndex.from_tuples(columns)
 
-# Flatten the multi-level columns to a single level with unique names
+    # Flatten multi-level columns to a single level
     df.columns = [f"{level_0}_{level_1}" if level_0 else level_1 for level_0, level_1 in df.columns]
 
-
-
-
-
-
-
-
+# --------------------- DISPLAY DATAFRAME -----------------------
 st.subheader("Historical Prices")
 st.write(df)
 
 st.subheader("Data Statistics")
 st.write(df.describe())
 
+# --------------------- PRICE CHART -----------------------
 st.subheader("Historical Price Chart - Adjusted Close Price")
-#st.line_chart(df['Adj Close'])
 st.line_chart(df[['Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger Bands_High', 'Bollinger Bands_Low']])
 
+# --------------------- VOLUME CHART -----------------------
 st.subheader("Volume")
 st.bar_chart(df['Price Data_Volume'])
 
+# --------------------- ADI CHART -----------------------
+st.subheader("Accumulation/Distribution Index (ADI)")
+st.line_chart(df['Indicators_ADI'])
 
+# --------------------- COMBINED CHART -----------------------
+st.subheader("Historical Price Chart with Volume, Bollinger Bands, and ADI")
 
-
-
-
-
-
-#############################################
-
-import plotly.graph_objects as go
-import streamlit as st
-
-st.subheader("Historical Price Chart with Volume and Bollinger Bands")
-
-# Create a figure
+# Create a Plotly figure
 fig = go.Figure()
 
 # Add Adjusted Close Price as a line
 fig.add_trace(go.Scatter(
-    x=df.index, 
-    y=df['Price Data_Adj Close'], 
-    mode='lines', 
+    x=df.index,
+    y=df['Price Data_Adj Close'],
+    mode='lines',
     name='Adj Close',
     line=dict(color='blue')
 ))
 
 # Add Bollinger Bands (Middle, High, Low) as lines
 fig.add_trace(go.Scatter(
-    x=df.index, 
-    y=df['Bollinger Bands_Middle'], 
-    mode='lines', 
+    x=df.index,
+    y=df['Bollinger Bands_Middle'],
+    mode='lines',
     name='Bollinger Middle',
     line=dict(color='orange')
 ))
 fig.add_trace(go.Scatter(
-    x=df.index, 
-    y=df['Bollinger Bands_High'], 
-    mode='lines', 
+    x=df.index,
+    y=df['Bollinger Bands_High'],
+    mode='lines',
     name='Bollinger High',
     line=dict(color='green')
 ))
 fig.add_trace(go.Scatter(
-    x=df.index, 
-    y=df['Bollinger Bands_Low'], 
-    mode='lines', 
+    x=df.index,
+    y=df['Bollinger Bands_Low'],
+    mode='lines',
     name='Bollinger Low',
     line=dict(color='red')
 ))
 
 # Add Volume as a bar chart (secondary Y-axis)
 fig.add_trace(go.Bar(
-    x=df.index, 
-    y=df['Price Data_Volume'], 
+    x=df.index,
+    y=df['Price Data_Volume'],
     name='Volume',
     marker_color='gray',
     opacity=0.6,
-    yaxis='y2'  # Use secondary Y-axis for volume
+    yaxis='y2'
+))
+
+# Add ADI as a separate line
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Indicators_ADI'],
+    mode='lines',
+    name='ADI',
+    line=dict(color='purple')
 ))
 
 # Update layout for dual-axis visualization
 fig.update_layout(
-    title='Adjusted Close Price, Bollinger Bands, and Volume',
+    title='Adjusted Close Price, Bollinger Bands, Volume, and ADI',
     xaxis=dict(title='Date'),
     yaxis=dict(
         title='Price',
