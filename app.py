@@ -10,14 +10,12 @@ from ta.volume import AccDistIndexIndicator  # Import for ADI
 st.title("Market Dashboard Application")
 st.sidebar.header("User Input")
 
-# --------------------- USER INPUT -----------------------
 def get_input():
     symbol = st.sidebar.text_input("Symbol", "BTC-USD")
     start_date = st.sidebar.date_input("Start Date", date(2021, 1, 1))
     end_date = st.sidebar.date_input("End Date", date(2021, 12, 31))
     return symbol, start_date, end_date
 
-# --------------------- GET DATA -----------------------
 def get_data(symbol, start_date, end_date):
     symbol = symbol.upper()
     if symbol:
@@ -29,9 +27,8 @@ def get_data(symbol, start_date, end_date):
 symbol, start_date, end_date = get_input()
 df = get_data(symbol, start_date, end_date)
 
-# --------------------- INDICATOR CALCULATIONS -----------------------
 if not df.empty and 'Adj Close' in df.columns:
-    df = dropna(df)  # Clean up NaN values
+    df = dropna(df)
     close_prices = df["Adj Close"].squeeze()
 
     # --------------------- BOLLINGER BANDS -----------------------
@@ -43,19 +40,51 @@ if not df.empty and 'Adj Close' in df.columns:
     df['bb_bbli'] = indicator_bb.bollinger_lband_indicator()  # Low Indicator
 
     # --------------------- ADI (Accumulation/Distribution Index) -----------------------
+    '''
     adi_indicator = AccDistIndexIndicator(
         high=df['High'],
         low=df['Low'],
         close=df['Adj Close'],  # Use 'Adj Close' for consistency
         volume=df['Volume'],
-        fillna=True
+        fillna=True  # Fill NaN values
     )
-    df['ADI'] = adi_indicator.acc_dist_index()  # Add ADI column
+    df['ADI'] = adi_indicator.acc_dist_index()  # Add ADI column to DataFrame
+    '''
 
-    # --------------------- FLATTEN COLUMNS -----------------------
-    df.columns = [
-        col.replace(' ', '_').lower() for col in df.columns
-    ]  # Normalize all column names to lowercase, flattened format
+    # Check the column names and ensure they are capitalized correctly
+    required_columns = ['High', 'Low', 'Close', 'Volume']
+
+    
+        
+    # Correctly access columns as 1D pandas Series
+    high = df['High'].squeeze()  # Convert to Series if it's accidentally 2D
+    low = df['Low'].squeeze()
+    close = df['Close'].squeeze()
+    volume = df['Volume'].squeeze()
+
+
+    # Calculate ADI
+    df['ADI'] = ta.volume.acc_dist_index(high, low, close, volume)
+    # --------------------- COLUMN RENAMING -----------------------
+    columns = [
+        ("Price Data", "Date"),
+        ("Price Data", "Adj Close"),
+        ("Price Data", "High"),
+        ("Price Data", "Low"),
+        ("Price Data", "Open"),
+        ("Price Data", "Volume"),
+        ("Bollinger Bands", "Middle"),
+        ("Bollinger Bands", "High"),
+        ("Bollinger Bands", "Low"),
+        ("Bollinger Bands", "High Indicator"),
+        ("Bollinger Bands", "Low Indicator"),
+        ("Indicators", "ADI"),  # Add ADI to columns
+    ]
+
+    df.columns = pd.MultiIndex.from_tuples(columns)
+
+    # Flatten multi-level columns to a single level
+    df.columns = [f"{level_0}_{level_1}" if level_0 else level_1 for level_0, level_1 in df.columns]
 
 # --------------------- DISPLAY DATAFRAME -----------------------
 st.subheader("Historical Prices")
@@ -65,16 +94,16 @@ st.subheader("Data Statistics")
 st.write(df.describe())
 
 # --------------------- PRICE CHART -----------------------
-st.subheader("Historical Price Chart - Adjusted Close Price and Bollinger Bands")
-st.line_chart(df[['adj_close', 'bb_bbm', 'bb_bbh', 'bb_bbl']])
+st.subheader("Historical Price Chart - Adjusted Close Price")
+st.line_chart(df[['Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger Bands_High', 'Bollinger Bands_Low']])
 
 # --------------------- VOLUME CHART -----------------------
 st.subheader("Volume")
-st.bar_chart(df['volume'])
+st.bar_chart(df['Price Data_Volume'])
 
 # --------------------- ADI CHART -----------------------
 st.subheader("Accumulation/Distribution Index (ADI)")
-st.line_chart(df['adi'])
+st.line_chart(df['Indicators_ADI'])
 
 # --------------------- COMBINED CHART -----------------------
 st.subheader("Historical Price Chart with Volume, Bollinger Bands, and ADI")
@@ -85,7 +114,7 @@ fig = go.Figure()
 # Add Adjusted Close Price as a line
 fig.add_trace(go.Scatter(
     x=df.index,
-    y=df['adj_close'],
+    y=df['Price Data_Adj Close'],
     mode='lines',
     name='Adj Close',
     line=dict(color='blue')
@@ -94,21 +123,21 @@ fig.add_trace(go.Scatter(
 # Add Bollinger Bands (Middle, High, Low) as lines
 fig.add_trace(go.Scatter(
     x=df.index,
-    y=df['bb_bbm'],
+    y=df['Bollinger Bands_Middle'],
     mode='lines',
     name='Bollinger Middle',
     line=dict(color='orange')
 ))
 fig.add_trace(go.Scatter(
     x=df.index,
-    y=df['bb_bbh'],
+    y=df['Bollinger Bands_High'],
     mode='lines',
     name='Bollinger High',
     line=dict(color='green')
 ))
 fig.add_trace(go.Scatter(
     x=df.index,
-    y=df['bb_bbl'],
+    y=df['Bollinger Bands_Low'],
     mode='lines',
     name='Bollinger Low',
     line=dict(color='red')
@@ -117,17 +146,19 @@ fig.add_trace(go.Scatter(
 # Add Volume as a bar chart (secondary Y-axis)
 fig.add_trace(go.Bar(
     x=df.index,
-    y=df['volume'],
+    y=df['Price Data_Volume'],
     name='Volume',
     marker_color='gray',
     opacity=0.6,
     yaxis='y2'
 ))
 
+
+
 # Add ADI as a separate line
 fig.add_trace(go.Scatter(
     x=df.index,
-    y=df['adi'],
+    y=df['Indicators_ADI'],
     mode='lines',
     name='ADI',
     line=dict(color='purple')
