@@ -8,6 +8,11 @@ from ta.volatility import BollingerBands
 from ta.volume import AccDistIndexIndicator  # Import for ADI
 import ta
 
+from streamlit_drawable_canvas import st_canvas
+
+
+
+
 st.title("Market Dashboard Application")
 st.sidebar.header("User Input")
 
@@ -237,6 +242,38 @@ fig.update_layout(
 
 # Display the combined chart
 st.plotly_chart(fig)
+
+
+
+
+
+
+
+
+# --- Drawing Canvas ---
+st.sidebar.header("Drawing Tools")  # Optional: Add a header in the sidebar
+canvas_result = st_canvas(
+    fill_color="rgba(255, 165, 0, 0.3)",  # Transparent fill for shapes
+    stroke_width=2,  # Thickness of the drawing lines
+    stroke_color="red",  # Line color
+    background_color="white",  # Background of the canvas
+    height=400,  # Canvas height (adjust as needed)
+    width=1000,  # Canvas width (adjust to match your chart width)
+    drawing_mode="freedraw",  # Drawing mode: "freedraw", "line", "rect", etc.
+    key="canvas",  # A unique key for the canvas
+)
+
+
+
+
+# --- Handle Drawing Data ---
+if canvas_result.json_data is not None:
+    # Extract shapes drawn on the canvas
+    st.write("Canvas JSON Data:", canvas_result.json_data)
+
+    # (Optional) Process drawn shapes for custom overlays or save them
+    for shape in canvas_result.json_data["objects"]:
+        st.write(shape)
 
 
 
