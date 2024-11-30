@@ -114,6 +114,23 @@ st.bar_chart(df['Price Data_Volume'])
 st.subheader("Accumulation/Distribution Index (ADI)")
 st.line_chart(df['Indicators_ADI'])
 
+
+
+# -------------- Scaling ADI -----------------------
+
+# Scale ADI to fit within the price range
+adi_min = df['Indicators_ADI'].min()
+adi_max = df['Indicators_ADI'].max()
+price_min = df['Price Data_Adj Close'].min()
+price_max = df['Price Data_Adj Close'].max()
+
+# Dynamically scale ADI to match the price range
+df['Scaled_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (price_max - price_min) + price_min
+
+
+
+
+
 # --------------------- COMBINED CHART -----------------------
 st.subheader("Historical Price Chart with Volume, Bollinger Bands, and ADI")
 
@@ -173,6 +190,14 @@ fig.add_trace(go.Scatter(
     line=dict(color='purple')
 ))
 
+# Add Scaled ADI as a line
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Scaled_ADI'],  # Use scaled ADI for display
+    mode='lines',
+    name='Scaled ADI',
+    line=dict(color='purple', dash='dash')  # Dashed line for distinction
+))
 
 
 
