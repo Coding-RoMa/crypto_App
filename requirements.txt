@@ -7,3 +7,4 @@ ta==0.11.0
 setuptools
 plotly
 numpy>=1.24.0
+streamlit_drawable_canvas
