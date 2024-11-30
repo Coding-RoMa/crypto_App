@@ -92,6 +92,13 @@ if not df.empty and 'Adj Close' in df.columns:
 
     # Create a normalized ADI column
     df['Indicators_Normalized_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (adj_close_max - adj_close_min) + adj_close_min
+    
+    # Create a normalized ADI column with checks for valid ranges
+    if adi_max != adi_min:
+        df['Indicators_Normalized_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (adj_close_max - adj_close_min) + adj_close_min
+    else:
+        # Handle edge case where ADI is constant
+        df['Indicators_Normalized_ADI'] = adj_close_min  # Assign a constant value (or choose a fallback)
 
 
     # --------------------- COLUMN RENAMING -----------------------
