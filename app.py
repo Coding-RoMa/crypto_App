@@ -6,6 +6,7 @@ from datetime import date
 from ta.utils import dropna
 from ta.volatility import BollingerBands
 from ta.volume import AccDistIndexIndicator  # Import for ADI
+import ta
 
 st.title("Market Dashboard Application")
 st.sidebar.header("User Input")
