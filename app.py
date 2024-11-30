@@ -190,14 +190,27 @@ fig.add_trace(go.Scatter(
     line=dict(color='purple')
 ))
 
-# Add Scaled ADI as a line
+## Add Scaled ADI as a line
+#fig.add_trace(go.Scatter(
+    #x=df.index,
+    #y=df['Scaled_ADI'],  # Use scaled ADI for display
+    #mode='lines',
+    #name='Scaled ADI',
+    #line=dict(color='purple', dash='dash')  # Dashed line for distinction
+#))
+
+
+
 fig.add_trace(go.Scatter(
     x=df.index,
-    y=df['Scaled_ADI'],  # Use scaled ADI for display
+    y=df['Scaled_ADI'],  # Use scaled ADI for visualization
     mode='lines',
     name='Scaled ADI',
-    line=dict(color='purple', dash='dash')  # Dashed line for distinction
+    line=dict(color='purple', dash='dash'),
+    customdata=df['Indicators_ADI'],  # Attach original ADI values
+    hovertemplate="Date: %{x}<br>Original ADI: %{customdata}<br>Scaled ADI: %{y}<extra></extra>"
 ))
+
 
 
 
