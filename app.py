@@ -63,7 +63,7 @@ if not df.empty and 'Adj Close' in df.columns:
     close = df['Close'].squeeze()
     volume = df['Volume'].squeeze()
 
-
+    '''
     # Calculate ADI
     df['ADI'] = ta.volume.acc_dist_index(high, low, close, volume)
     
@@ -77,6 +77,22 @@ if not df.empty and 'Adj Close' in df.columns:
 
     # Create a normalized ADI column
     df['Normalized_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (adj_close_max - adj_close_min) + adj_close_min
+
+    '''
+
+    # Calculate ADI and assign to a consistent column name
+    df['Indicators_ADI'] = ta.volume.acc_dist_index(high, low, close, volume)
+
+    # Normalize ADI to match the range of 'Adj Close'
+    adi_min = df['Indicators_ADI'].min()
+    adi_max = df['Indicators_ADI'].max()
+
+    adj_close_min = df['Adj Close'].min()
+    adj_close_max = df['Adj Close'].max()
+
+    # Create a normalized ADI column
+    df['Indicators_Normalized_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (adj_close_max - adj_close_min) + adj_close_min
+
 
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
@@ -92,7 +108,7 @@ if not df.empty and 'Adj Close' in df.columns:
         ("Bollinger Bands", "High Indicator"),
         ("Bollinger Bands", "Low Indicator"),
         ("Indicators", "ADI"),  # Add ADI to columns
-        ("NormADI", "NormADI"),
+        ("Indicators", "Normalized ADI"),
     ]
 
     df.columns = pd.MultiIndex.from_tuples(columns)
@@ -182,7 +198,7 @@ fig.add_trace(go.Bar(
 # Add Normalized ADI as a line
 fig.add_trace(go.Scatter(
     x=df.index,
-    y=df['Normalized_ADI'],  # Use normalized ADI
+    y=df['Indicators_Normalized_ADI'],  # Use normalized ADI
     mode='lines',
     name='Normalized ADI',
     line=dict(color='purple', dash='dash')  # Different style for ADI
