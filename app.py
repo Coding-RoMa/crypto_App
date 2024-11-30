@@ -63,43 +63,16 @@ if not df.empty and 'Adj Close' in df.columns:
     close = df['Close'].squeeze()
     volume = df['Volume'].squeeze()
 
-    '''
+    
     # Calculate ADI
     df['ADI'] = ta.volume.acc_dist_index(high, low, close, volume)
     
-    # --------------- ADI Normalization --------------------------
-    # Normalize ADI to match the range of 'Adj Close'
-    adi_min = df['Indicators_ADI'].min()
-    adi_max = df['Indicators_ADI'].max()
-
-    adj_close_min = df['Price Data_Adj Close'].min()
-    adj_close_max = df['Price Data_Adj Close'].max()
-
-    # Create a normalized ADI column
-    df['Normalized_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (adj_close_max - adj_close_min) + adj_close_min
-
-    '''
+    
 
     # Calculate ADI and assign to a consistent column name
     df['Indicators_ADI'] = ta.volume.acc_dist_index(high, low, close, volume)
 
-    # Normalize ADI to match the range of 'Adj Close'
-    adi_min = df['Indicators_ADI'].min()
-    adi_max = df['Indicators_ADI'].max()
-
-    adj_close_min = df['Adj Close'].min()
-    adj_close_max = df['Adj Close'].max()
-
-    # Create a normalized ADI column
-    df['Indicators_Normalized_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (adj_close_max - adj_close_min) + adj_close_min
     
-    # Create a normalized ADI column with checks for valid ranges
-    if adi_max != adi_min:
-        df['Indicators_Normalized_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (adj_close_max - adj_close_min) + adj_close_min
-    else:
-        # Handle edge case where ADI is constant
-        df['Indicators_Normalized_ADI'] = adj_close_min  # Assign a constant value (or choose a fallback)
-
 
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
@@ -115,7 +88,7 @@ if not df.empty and 'Adj Close' in df.columns:
         ("Bollinger Bands", "High Indicator"),
         ("Bollinger Bands", "Low Indicator"),
         ("Indicators", "ADI"),  # Add ADI to columns
-        ("Indicators", "Normalized ADI"),
+   
     ]
 
     df.columns = pd.MultiIndex.from_tuples(columns)
@@ -192,28 +165,20 @@ fig.add_trace(go.Bar(
 
 
 
-## Add ADI as a separate line
-#fig.add_trace(go.Scatter(
-    #x=df.index,
-    #y=df['Indicators_ADI'],
-    #mode='lines',
-    #name='ADI',
-    #line=dict(color='purple')
-#))
-
-
-# Add Normalized ADI as a line
+# Add ADI as a separate line
 fig.add_trace(go.Scatter(
     x=df.index,
-    y=df['Indicators_Normalized_ADI'],  # Use normalized ADI
+    y=df['Indicators_ADI'],
     mode='lines',
-    name='Normalized ADI',
-    line=dict(color='purple', dash='dash')  # Different style for ADI
+    name='ADI',
+    line=dict(color='purple')
 ))
 
 
 
-'''
+
+
+
 # Update layout for dual-axis visualization
 fig.update_layout(
     title='Adjusted Close Price, Bollinger Bands, Volume, and ADI',
@@ -236,29 +201,7 @@ fig.update_layout(
 # Display the combined chart
 st.plotly_chart(fig)
 
-'''
 
 
-# Update layout for dual-axis visualization
-fig.update_layout(
-    title='Adjusted Close Price, Bollinger Bands, Volume, and Normalized ADI',
-    xaxis=dict(title='Date'),
-    yaxis=dict(
-        title='Price (including Normalized ADI)',
-        showgrid=True,
-        zeroline=True
-    ),
-    yaxis2=dict(
-        title='Volume',
-        overlaying='y',
-        side='right'
-    ),
-    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-    height=600,
-    width=1000
-)
-
-# Display the combined chart
-st.plotly_chart(fig)
 
 
