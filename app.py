@@ -69,8 +69,7 @@ if not df.empty and 'Adj Close' in df.columns:
     
     
 
-    # Calculate ADI and assign to a consistent column name
-    df['Indicators_ADI'] = ta.volume.acc_dist_index(high, low, close, volume)
+
 
     
 
