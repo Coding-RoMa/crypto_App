@@ -345,6 +345,9 @@ if canvas_result.json_data is not None:
 '''
 
 
+
+
+'''
 # making the notes and drawings permanently accessible and downloadable
 
 import streamlit as st
@@ -419,6 +422,102 @@ with open("saved_annotations.json", "w") as file:
 # Provide a download button for the JSON file
 st.download_button(
     label="Download Annotations",
+    data=json.dumps(saved_data, indent=4),
+    file_name="annotations.json",
+    mime="application/json",
+)
+'''
+
+
+#making the drawings also downloadable as images
+
+import streamlit as st
+from streamlit_drawable_canvas import st_canvas
+from PIL import Image
+import io
+import json
+import base64
+
+# --- Initialize Session State ---
+if "drawing_data" not in st.session_state:
+    st.session_state["drawing_data"] = []  # For drawings
+if "text_annotations" not in st.session_state:
+    st.session_state["text_annotations"] = []  # For text notes
+
+# --- Sidebar Drawing Options ---
+st.sidebar.header("Drawing Tools")
+
+# Choose drawing mode
+drawing_mode = st.sidebar.selectbox(
+    "Drawing tool:", ("freedraw", "line", "rect", "circle", "transform")
+)
+
+# Choose line color
+stroke_color = st.sidebar.color_picker("Line color:", "#FF0000")  # Default red
+
+# Choose fill color for shapes
+fill_color = st.sidebar.color_picker("Fill color:", "#FFA500")  # Default orange
+
+# Choose stroke width
+stroke_width = st.sidebar.slider("Stroke width:", 1, 25, 2)
+
+# Add text input for text annotations
+text_to_add = st.sidebar.text_input("Add text:", value="")  # Default empty text
+
+# --- Drawing Canvas ---
+canvas_result = st_canvas(
+    fill_color=fill_color,  # Shape fill color
+    stroke_width=stroke_width,  # Thickness of the drawing lines
+    stroke_color=stroke_color,  # Line color
+    background_color="#FFFFFF",  # Background of the canvas (white)
+    height=400,  # Canvas height
+    width=1000,  # Canvas width
+    drawing_mode=drawing_mode,  # Drawing mode: "freedraw", "line", "rect", etc.
+    key="canvas",  # Unique key for the canvas
+)
+
+# --- Handle Drawing Data ---
+if canvas_result.image_data is not None:
+    # Save the drawing as an image
+    image = Image.fromarray(canvas_result.image_data.astype("uint8"), "RGBA")
+
+    # Save the image as a file in memory for download
+    img_buffer = io.BytesIO()
+    image.save(img_buffer, format="PNG")
+    img_buffer.seek(0)
+
+    # Display the image
+    st.image(image, caption="Canvas Drawing", use_column_width=True)
+
+    # Provide download button for the image
+    st.download_button(
+        label="Download Drawing as Image",
+        data=img_buffer,
+        file_name="drawing.png",
+        mime="image/png",
+    )
+
+# --- Handle Text Annotations ---
+if text_to_add:
+    # Save text annotation to session state
+    st.session_state["text_annotations"].append(text_to_add)
+
+    # Display saved text annotations
+    st.write("Text Annotations:", st.session_state["text_annotations"])
+
+# --- Save and Download Data ---
+# Combine drawings and text into a single dictionary
+saved_data = {
+    "text_annotations": st.session_state["text_annotations"],
+}
+
+# Save data to a JSON file
+with open("saved_annotations.json", "w") as file:
+    json.dump(saved_data, file)
+
+# Provide a download button for the JSON file
+st.download_button(
+    label="Download Annotations (Text)",
     data=json.dumps(saved_data, indent=4),
     file_name="annotations.json",
     mime="application/json",
