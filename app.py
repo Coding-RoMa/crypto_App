@@ -527,7 +527,7 @@ st.download_button(
 '''
 
 
-
+'''
 # making it possible to integrate text annotations with the images and to delete unnecessary notes
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
@@ -630,3 +630,125 @@ if st.session_state["text_annotations"]:
         file_name="annotations.json",
         mime="application/json",
     )
+'''
+
+
+# making it possible to manage notes and add them to drawings if i want to
+
+import streamlit as st
+from streamlit_drawable_canvas import st_canvas
+from PIL import Image, ImageDraw, ImageFont
+import io
+import json
+
+# --- Initialize Session State ---
+if "drawing_data" not in st.session_state:
+    st.session_state["drawing_data"] = []  # For drawings
+if "text_annotations" not in st.session_state:
+    st.session_state["text_annotations"] = []  # For sidebar notes
+if "canvas_annotations" not in st.session_state:
+    st.session_state["canvas_annotations"] = []  # For text added directly to the canvas
+
+# --- Sidebar Drawing Options ---
+st.sidebar.header("Drawing Tools")
+
+# Choose drawing mode
+drawing_mode = st.sidebar.selectbox(
+    "Drawing tool:", ("freedraw", "line", "rect", "circle", "transform")
+)
+
+# Choose line color
+stroke_color = st.sidebar.color_picker("Line color:", "#FF0000")  # Default red
+
+# Choose fill color for shapes (no transparency)
+fill_color = st.sidebar.color_picker("Fill color:", "#FFA500")  # Default orange
+
+# Choose stroke width
+stroke_width = st.sidebar.slider("Stroke width:", 1, 25, 2)
+
+# --- Add Sidebar Annotations ---
+st.sidebar.subheader("Add Sidebar Notes (Not Included in Image)")
+text_to_add = st.sidebar.text_input("Add sidebar note:")
+if st.sidebar.button("Add Note") and text_to_add.strip():
+    st.session_state["text_annotations"].append(text_to_add)
+
+# Display and manage sidebar notes
+st.sidebar.subheader("Manage Sidebar Notes")
+indices_to_delete = []
+for i, note in enumerate(st.session_state["text_annotations"]):
+    col1, col2 = st.sidebar.columns([4, 1])
+    with col1:
+        st.write(note)
+    with col2:
+        if st.button("❌", key=f"delete_note_{i}"):
+            indices_to_delete.append(i)
+
+# Remove notes marked for deletion
+if indices_to_delete:
+    st.session_state["text_annotations"] = [
+        note for idx, note in enumerate(st.session_state["text_annotations"])
+        if idx not in indices_to_delete
+    ]
+
+# --- Add Canvas Annotations ---
+st.sidebar.subheader("Add Text to Canvas (Included in Image)")
+canvas_text = st.sidebar.text_input("Text to add to canvas:")
+x_pos = st.sidebar.number_input("X Position:", min_value=0, max_value=1000, value=50)
+y_pos = st.sidebar.number_input("Y Position:", min_value=0, max_value=400, value=50)
+
+if st.sidebar.button("Add Canvas Annotation") and canvas_text.strip():
+    st.session_state["canvas_annotations"].append(
+        {"text": canvas_text, "x": x_pos, "y": y_pos}
+    )
+
+# --- Drawing Canvas ---
+canvas_result = st_canvas(
+    fill_color=fill_color,  # Shape fill color
+    stroke_width=stroke_width,  # Thickness of the drawing lines
+    stroke_color=stroke_color,  # Line color
+    background_color="#FFFFFF",  # Background of the canvas (white)
+    height=400,  # Canvas height
+    width=1000,  # Canvas width
+    drawing_mode=drawing_mode,  # Drawing mode: "freedraw", "line", "rect", etc.
+    key="canvas",  # Unique key for the canvas
+)
+
+# --- Handle Drawing Data ---
+final_image = None
+if canvas_result.image_data is not None:
+    # Convert canvas data to an image
+    image = Image.fromarray(canvas_result.image_data.astype("uint8"), "RGBA")
+
+    # Add canvas text annotations
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default()  # Use default font
+    for annotation in st.session_state["canvas_annotations"]:
+        draw.text((annotation["x"], annotation["y"]), annotation["text"], fill="black", font=font)
+
+    # Save the final image for download
+    final_image = image
+    img_buffer = io.BytesIO()
+    image.save(img_buffer, format="PNG")
+    img_buffer.seek(0)
+
+    # Display the updated image
+    st.image(image, caption="Canvas Drawing with Annotations", use_column_width=True)
+
+    # Provide download button for the image
+    st.download_button(
+        label="Download Final Image with Canvas Annotations",
+        data=img_buffer,
+        file_name="drawing_with_canvas_annotations.png",
+        mime="image/png",
+    )
+
+# --- Save and Download Sidebar Notes ---
+if st.session_state["text_annotations"]:
+    saved_data = {"text_annotations": st.session_state["text_annotations"]}
+    st.download_button(
+        label="Download Sidebar Notes (Text Only)",
+        data=json.dumps(saved_data, indent=4),
+        file_name="sidebar_notes.json",
+        mime="application/json",
+    )
+
