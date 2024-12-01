@@ -265,7 +265,7 @@ canvas_result = st_canvas(
 
 
 
-
+'''
 # --- Handle Drawing Data ---
 if canvas_result.json_data is not None:
     # Extract shapes drawn on the canvas
@@ -274,7 +274,7 @@ if canvas_result.json_data is not None:
     # (Optional) Process drawn shapes for custom overlays or save them
     for shape in canvas_result.json_data["objects"]:
         st.write(shape)
-
+'''
 
 # Extract drawing data from the canvas
 if canvas_result.json_data is not None:
