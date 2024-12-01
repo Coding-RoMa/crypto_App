@@ -96,7 +96,7 @@ if not df.empty and 'Adj Close' in df.columns:
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
         ("Price Data", "Date"),
-        #("Price Data", "Close"),
+        ("Price Data", "Close"),
         ("Price Data", "Adj Close"),
         ("Price Data", "High"),
         ("Price Data", "Low"),
@@ -126,7 +126,7 @@ st.write(df.describe())
 
 # --------------------- PRICE CHART -----------------------
 st.subheader("Historical Price Chart - Adjusted Close Price")
-st.line_chart(df[['Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger Bands_High', 'Bollinger Bands_Low']])
+st.line_chart(df[['Price Data_Close', 'Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger Bands_High', 'Bollinger Bands_Low']])
 
 # --------------------- VOLUME CHART -----------------------
 st.subheader("Volume")
