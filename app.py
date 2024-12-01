@@ -276,6 +276,27 @@ if canvas_result.json_data is not None:
         st.write(shape)
 
 
+# Extract drawing data from the canvas
+if canvas_result.json_data is not None:
+    for obj in canvas_result.json_data["objects"]:
+        if obj["type"] == "line":  # Example: Handle lines
+            x0, y0 = obj["x1"], obj["y1"]
+            x1, y1 = obj["x2"], obj["y2"]
+
+            # Add the line to the Plotly chart
+            fig.add_shape(
+                type="line",
+                x0=x0,
+                y0=y0,
+                x1=x1,
+                y1=y1,
+                line=dict(color="red", width=2)
+            )
+
+# Re-display the updated Plotly chart
+st.plotly_chart(fig)
+
+
 
 
 
