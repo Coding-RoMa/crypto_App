@@ -18,6 +18,9 @@ from ta.momentum import RSIIndicator
 st.title("Market Dashboard Application")
 st.sidebar.header("User Input")
 
+
+
+
 def get_input():
     symbol = st.sidebar.text_input("Symbol", "BTC-USD")
     start_date = st.sidebar.date_input("Start Date", date(2021, 1, 1))
@@ -86,13 +89,14 @@ if not df.empty and 'Adj Close' in df.columns:
     
 
 
+    st.write(df.columns)
 
     
 
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
         ("Price Data", "Date"),
-        ("Price Data", "Close"),
+        #("Price Data", "Close"),
         ("Price Data", "Adj Close"),
         ("Price Data", "High"),
         ("Price Data", "Low"),
