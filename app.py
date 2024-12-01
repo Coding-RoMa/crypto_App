@@ -10,6 +10,8 @@ import ta
 
 from streamlit_drawable_canvas import st_canvas
 
+from ta.momentum import RSIIndicator
+
 
 
 
