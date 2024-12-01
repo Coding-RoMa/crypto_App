@@ -149,7 +149,8 @@ st.write(df.describe())
 
 # --------------------- VOLUME CHART -----------------------
 st.subheader("Volume")
-st.bar_chart(df['Price Data_Volume'])
+#st.bar_chart(df['Price Data_Volume'])
+#st.bar_chart(df['Volume'])
 
 # --------------------- ADI CHART -----------------------
 st.subheader("Accumulation/Distribution Index (ADI)")
