@@ -81,13 +81,6 @@ if not df.empty and 'Adj Close' in df.columns:
         rsi_indicator = RSIIndicator(close=close, window=rsi_period, fillna=fillna_option)
         df["RSI"] = rsi_indicator.rsi()
 
-    # Display RSI data in the app
-    st.subheader("RSI Data")
-    st.write(df[["Close", "RSI"]].tail(20))  # Display the last 20 rows of Close and RSI
-
-    # --------------------- RSI Chart -----------------------
-    st.subheader("RSI Chart")
-    st.line_chart(df["RSI"])
 
 
     
@@ -152,6 +145,13 @@ price_max = df['Price Data_Adj Close'].max()
 df['Scaled_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (price_max - price_min) + price_min
 
 
+# Display RSI data in the app
+st.subheader("RSI Data")
+st.write(df[["Close", "RSI"]].tail(20))  # Display the last 20 rows of Close and RSI
+
+# --------------------- RSI Chart -----------------------
+st.subheader("RSI Chart")
+st.line_chart(df["RSI"])
 
 
 
@@ -232,10 +232,39 @@ fig.add_trace(go.Scatter(
 
 
 
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Indicators_RSI'],  # RSI column
+    mode='lines',
+    name='RSI',
+    line=dict(color='brown')
+))
+
+
+fig.add_hline(
+    y=70,
+    line_dash="dot",
+    line_color="red",
+    annotation_text="Overbought (70)",
+    annotation_position="top right"
+)
+
+
+fig.add_hline(
+    y=30,
+    line_dash="dot",
+    line_color="green",
+    annotation_text="Oversold (30)",
+    annotation_position="top right"
+)
+
+
+
+
 
 # Update layout for dual-axis visualization
 fig.update_layout(
-    title='Adjusted Close Price, Bollinger Bands, Volume, and ADI',
+    title='Adjusted Close Price, Bollinger Bands, Volume, ADI, and RSI',
     xaxis=dict(title='Date'),
     yaxis=dict(
         title='Price',
@@ -258,6 +287,8 @@ st.plotly_chart(fig)
 
 
 
+
+# -------------------------- Canvas -----------------------------------
 
 
 # making it possible to manage notes and add them to drawings if i want to
