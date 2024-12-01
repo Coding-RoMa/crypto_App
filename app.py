@@ -118,11 +118,24 @@ if not df.empty and 'Adj Close' in df.columns:
    
     ]
 
-
+    '''
     df.columns = pd.MultiIndex.from_tuples(columns)
 
     # Flatten multi-level columns to a single level
     df.columns = [f"{level_0}_{level_1}" if level_0 else level_1 for level_0, level_1 in df.columns]
+    '''
+
+    # Validate column length
+    st.write(f"Expected Columns: {len(columns)}")
+    st.write(f"Actual Columns: {len(df.columns)}")
+
+    # Rename columns
+    try:
+        df.columns = pd.MultiIndex.from_tuples(columns)
+        df.columns = [f"{level_0}_{level_1}" if level_0 else level_1 for level_0, level_1 in df.columns]
+    except ValueError as e:
+        st.error(f"Column mismatch: {e}")
+        st.write("Columns After Calculation:", df.columns)
 
 
 # --------------------- DISPLAY DATAFRAME -----------------------
