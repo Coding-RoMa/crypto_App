@@ -66,26 +66,29 @@ if not df.empty and 'Adj Close' in df.columns:
     df['ADI'] = ta.volume.acc_dist_index(high, low, close, volume)
 
 
-    # --------------------- RSI -----------------------------------
 
+# --------------------- RSI (Relative Strength Index) -----------------------
 
-# Ensure the Close column exists in your dataset
-if "Close" in df.columns:
-    # --- RSI Calculation ---
+    # Check that the 'Close' column exists and flatten it
+    if "Close" in df.columns:
+        close = df["Close"].squeeze()  # Ensure it's a 1D pandas Series
+
+    # Add RSI Period and FillNA options in the Sidebar
     rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
     fillna_option = st.sidebar.checkbox("Fill NaN values in RSI", value=False)
 
     # Calculate RSI using the ta library
-    rsi_indicator = RSIIndicator(close=df["Close"], window=rsi_period, fillna=fillna_option)
+    rsi_indicator = RSIIndicator(close=close, window=rsi_period, fillna=fillna_option)
     df["RSI"] = rsi_indicator.rsi()
 
-    # Display RSI in the app
+    # Display RSI data in the app
     st.subheader("RSI Data")
     st.write(df[["Close", "RSI"]].tail(20))  # Display the last 20 rows of Close and RSI
 
-    # --- RSI Chart ---
+    # --------------------- RSI Chart -----------------------
     st.subheader("RSI Chart")
     st.line_chart(df["RSI"])
+
 
     
 
