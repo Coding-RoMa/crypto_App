@@ -290,23 +290,20 @@ drawing_mode = st.sidebar.selectbox(
 )
 
 # Choose line color
-stroke_color = st.sidebar.color_picker("Line color:", "#FF0000")
+stroke_color = st.sidebar.color_picker("Line color:", "#FF0000")  # Default red
 
-# Choose fill color for shapes
-fill_color = st.sidebar.color_picker("Fill color:", "rgba(255, 165, 0, 0.3)")
+# Choose fill color for shapes (no transparency)
+fill_color = st.sidebar.color_picker("Fill color:", "#FFA500")  # Default orange
 
 # Choose stroke width
 stroke_width = st.sidebar.slider("Stroke width:", 1, 25, 2)
 
-# Add text (optional)
-text_to_add = st.sidebar.text_input("Add text:", value="")
-
 # --- Drawing Canvas ---
 canvas_result = st_canvas(
-    fill_color=fill_color,  # Transparent fill for shapes
+    fill_color=fill_color,  # Shape fill color
     stroke_width=stroke_width,  # Thickness of the drawing lines
     stroke_color=stroke_color,  # Line color
-    background_color="white",  # Background of the canvas
+    background_color="#FFFFFF",  # Background of the canvas (white)
     height=400,  # Canvas height
     width=1000,  # Canvas width
     drawing_mode=drawing_mode,  # Drawing mode: "freedraw", "line", "rect", etc.
