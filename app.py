@@ -281,6 +281,8 @@ if canvas_result.json_data is not None:
 
 # enhancing canvas functionalities to get a more personalized experience
 
+# Enhancing canvas functionalities to get a more personalized experience
+
 # --- Sidebar Drawing Options ---
 st.sidebar.header("Drawing Tools")
 
@@ -297,6 +299,9 @@ fill_color = st.sidebar.color_picker("Fill color:", "#FFA500")  # Default orange
 
 # Choose stroke width
 stroke_width = st.sidebar.slider("Stroke width:", 1, 25, 2)
+
+# Add text input for text annotations
+text_to_add = st.sidebar.text_input("Add text:", value="")  # Default empty text
 
 # --- Drawing Canvas ---
 canvas_result = st_canvas(
@@ -318,9 +323,6 @@ if canvas_result.json_data is not None:
     for shape in canvas_result.json_data["objects"]:
         st.write(shape)
 
+    # Display text annotations (if any)
     if text_to_add:
         st.write(f"Text added: {text_to_add}")
-
-
-
-
