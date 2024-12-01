@@ -73,13 +73,13 @@ if not df.empty and 'Adj Close' in df.columns:
     if "Close" in df.columns:
         close = df["Close"].squeeze()  # Ensure it's a 1D pandas Series
 
-    # Add RSI Period and FillNA options in the Sidebar
-    rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
-    fillna_option = st.sidebar.checkbox("Fill NaN values in RSI", value=False)
+        # Add RSI Period and FillNA options in the Sidebar
+        rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+        fillna_option = st.sidebar.checkbox("Fill NaN values in RSI", value=False)
 
-    # Calculate RSI using the ta library
-    rsi_indicator = RSIIndicator(close=close, window=rsi_period, fillna=fillna_option)
-    df["RSI"] = rsi_indicator.rsi()
+        # Calculate RSI using the ta library
+        rsi_indicator = RSIIndicator(close=close, window=rsi_period, fillna=fillna_option)
+        df["RSI"] = rsi_indicator.rsi()
 
     # Display RSI data in the app
     st.subheader("RSI Data")
@@ -110,6 +110,7 @@ if not df.empty and 'Adj Close' in df.columns:
         ("Bollinger Bands", "High Indicator"),
         ("Bollinger Bands", "Low Indicator"),
         ("Indicators", "ADI"),  # Add ADI to columns
+        ("Indicators", "RSI"),  # Add RSI to columns
    
     ]
 
