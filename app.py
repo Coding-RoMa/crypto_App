@@ -86,7 +86,10 @@ if not df.empty and 'Adj Close' in df.columns:
 
 
 
-    
+    # Ensure 'Close' column is retained in the DataFrame
+    if "Close" in df.columns:
+        df["Close"] = df["Close"]  # Explicitly copy Close column to retain it
+
 
 
     st.write(df.columns)
