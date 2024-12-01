@@ -143,9 +143,9 @@ st.write(df)
 st.subheader("Data Statistics")
 st.write(df.describe())
 
-# --------------------- PRICE CHART -----------------------
-st.subheader("Historical Price Chart - Adjusted Close Price")
-st.line_chart(df[['Price Data_Close', 'Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger Bands_High', 'Bollinger Bands_Low']])
+## --------------------- PRICE CHART -----------------------
+#st.subheader("Historical Price Chart - Adjusted Close Price")
+#st.line_chart(df[['Price Data_Close', 'Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger Bands_High', 'Bollinger Bands_Low']])
 
 # --------------------- VOLUME CHART -----------------------
 st.subheader("Volume")
