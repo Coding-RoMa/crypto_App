@@ -35,7 +35,7 @@ df = get_data(symbol, start_date, end_date)
 
 if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
-    close_prices = df["Adj Close"].squeeze()
+    close_prices = df["Adj Close"].squeeze()  
 
     # --------------------- BOLLINGER BANDS -----------------------
     indicator_bb = BollingerBands(close=close_prices, window=20, window_dev=2)
@@ -62,7 +62,29 @@ if not df.empty and 'Adj Close' in df.columns:
     
     # Calculate ADI
     df['ADI'] = ta.volume.acc_dist_index(high, low, close, volume)
-    
+
+
+    # --------------------- RSI -----------------------------------
+
+
+# Ensure the Close column exists in your dataset
+if "Close" in df.columns:
+    # --- RSI Calculation ---
+    rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+    fillna_option = st.sidebar.checkbox("Fill NaN values in RSI", value=False)
+
+    # Calculate RSI using the ta library
+    rsi_indicator = RSIIndicator(close=df["Close"], window=rsi_period, fillna=fillna_option)
+    df["RSI"] = rsi_indicator.rsi()
+
+    # Display RSI in the app
+    st.subheader("RSI Data")
+    st.write(df[["Close", "RSI"]].tail(20))  # Display the last 20 rows of Close and RSI
+
+    # --- RSI Chart ---
+    st.subheader("RSI Chart")
+    st.line_chart(df["RSI"])
+
     
 
 
