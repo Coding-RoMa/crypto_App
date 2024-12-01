@@ -289,32 +289,33 @@ canvas_result = st_canvas(
     stroke_width=2,  # Thickness of the drawing lines
     stroke_color="red",  # Line color
     background_color="white",  # Background of the canvas
-    height=400,  # Canvas height (adjust as needed)
-    width=1000,  # Canvas width (adjust to match your chart width)
-    drawing_mode="freedraw",  # Drawing mode: "freedraw", "line", "rect", etc.
-    key="canvas",  # A unique key for the canvas
+    height=400,  # Canvas height
+    width=1000,  # Canvas width (should match the chart width)
+    drawing_mode="line",  # Drawing mode: "freedraw", "line", "rect", etc.
+    key="canvas",  # Unique key for the canvas
 )
 
 # Extract drawing data from the canvas
 if canvas_result.json_data is not None:
     for obj in canvas_result.json_data["objects"]:
-        if obj["type"] == "line":  # Example: Handle lines
+        # Check if the drawn object is a line
+        if obj["type"] == "line":
+            # Extract coordinates for the line
             x0, y0 = obj["x1"], obj["y1"]
             x1, y1 = obj["x2"], obj["y2"]
 
-            # Add the line to the Plotly chart
+            # Add the line to the Plotly chart as a shape
             fig.add_shape(
                 type="line",
                 x0=x0,
                 y0=y0,
                 x1=x1,
                 y1=y1,
-                line=dict(color="red", width=2)
+                line=dict(color="red", width=2),
             )
 
 # Re-display the updated Plotly chart
-st.plotly_chart(fig, key="updated_chart")  # Unique key added
-
+st.plotly_chart(fig, key="updated_chart")
 
 
 
