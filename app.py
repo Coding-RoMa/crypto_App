@@ -250,6 +250,7 @@ st.plotly_chart(fig)
 
 # -------------- I can consider the following as a sort of block notes --------------------
 
+'''
 # --- Drawing Canvas ---
 st.sidebar.header("Drawing Tools")  # Optional: Add a header in the sidebar
 canvas_result = st_canvas(
@@ -279,6 +280,36 @@ if canvas_result.json_data is not None:
 
 # Re-display the updated Plotly chart
 st.plotly_chart(fig, key="unique_plot")  # Add a unique key
+
+'''
+
+# the following block removes unnecessary calls to the plotly chart - since i'm not sync drwaings, there's no need to have multiple plots in the app
+
+# --- Drawing Canvas ---
+st.sidebar.header("Drawing Tools")
+canvas_result = st_canvas(
+    fill_color="rgba(255, 165, 0, 0.3)",  # Transparent fill for shapes
+    stroke_width=2,  # Thickness of the drawing lines
+    stroke_color="red",  # Line color
+    background_color="white",  # Background of the canvas
+    height=400,  # Canvas height
+    width=1000,  # Canvas width
+    drawing_mode="freedraw",  # Drawing mode: "freedraw", "line", "rect", etc.
+    key="canvas",  # Unique key for the canvas
+)
+
+# --- Handle Drawing Data ---
+if canvas_result.json_data is not None:
+    # Extract shapes drawn on the canvas
+    st.write("Canvas JSON Data:", canvas_result.json_data)
+
+    # Process drawn shapes or display JSON data (optional)
+    for shape in canvas_result.json_data["objects"]:
+        st.write(shape)
+
+# Render the Plotly chart ONLY ONCE
+st.plotly_chart(fig, key="unique_plot")
+
 
 
 
