@@ -249,7 +249,7 @@ st.plotly_chart(fig)
 
 
 
-
+'''
 # the following block removes unnecessary calls to the plotly chart - since i'm not sync drwaings, there's no need to have multiple plots in the app
 
 # --- Drawing Canvas ---
@@ -277,6 +277,52 @@ if canvas_result.json_data is not None:
 # Render the Plotly chart ONLY ONCE
 #st.plotly_chart(fig, key="unique_plot")
 
+'''
+
+# enhancing canvas functionalities to get a more personalized experience
+
+# --- Sidebar Drawing Options ---
+st.sidebar.header("Drawing Tools")
+
+# Choose drawing mode
+drawing_mode = st.sidebar.selectbox(
+    "Drawing tool:", ("freedraw", "line", "rect", "circle", "transform")
+)
+
+# Choose line color
+stroke_color = st.sidebar.color_picker("Line color:", "#FF0000")
+
+# Choose fill color for shapes
+fill_color = st.sidebar.color_picker("Fill color:", "rgba(255, 165, 0, 0.3)")
+
+# Choose stroke width
+stroke_width = st.sidebar.slider("Stroke width:", 1, 25, 2)
+
+# Add text (optional)
+text_to_add = st.sidebar.text_input("Add text:", value="")
+
+# --- Drawing Canvas ---
+canvas_result = st_canvas(
+    fill_color=fill_color,  # Transparent fill for shapes
+    stroke_width=stroke_width,  # Thickness of the drawing lines
+    stroke_color=stroke_color,  # Line color
+    background_color="white",  # Background of the canvas
+    height=400,  # Canvas height
+    width=1000,  # Canvas width
+    drawing_mode=drawing_mode,  # Drawing mode: "freedraw", "line", "rect", etc.
+    key="canvas",  # Unique key for the canvas
+)
+
+# --- Handle Drawing Data ---
+if canvas_result.json_data is not None:
+    st.write("Canvas JSON Data:", canvas_result.json_data)
+
+    # Process drawn shapes or display JSON data
+    for shape in canvas_result.json_data["objects"]:
+        st.write(shape)
+
+    if text_to_add:
+        st.write(f"Text added: {text_to_add}")
 
 
 
