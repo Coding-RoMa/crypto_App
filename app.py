@@ -115,9 +115,21 @@ if not df.empty and 'Adj Close' in df.columns:
    
     ]
 
+    '''
     df.columns = pd.MultiIndex.from_tuples(columns)
 
     # Flatten multi-level columns to a single level
+    df.columns = [f"{level_0}_{level_1}" if level_0 else level_1 for level_0, level_1 in df.columns]
+    '''
+
+    
+    # Verify DataFrame columns before renaming
+    st.write("Columns Before Renaming:", df.columns)
+
+    # Rename columns
+    df.columns = pd.MultiIndex.from_tuples(columns)
+
+    # Flatten multi-level columns
     df.columns = [f"{level_0}_{level_1}" if level_0 else level_1 for level_0, level_1 in df.columns]
 
 # --------------------- DISPLAY DATAFRAME -----------------------
