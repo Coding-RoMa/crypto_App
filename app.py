@@ -248,7 +248,7 @@ st.plotly_chart(fig)
 
 
 
-'''
+# -------------- I can consider the following as a sort of block notes --------------------
 
 # --- Drawing Canvas ---
 st.sidebar.header("Drawing Tools")  # Optional: Add a header in the sidebar
@@ -280,8 +280,14 @@ if canvas_result.json_data is not None:
 # Re-display the updated Plotly chart
 st.plotly_chart(fig)
 
-'''
 
+
+# ---------------------------------------------------------------------------------------------------
+
+# I was trying to sync drawings data with the combined plot by using the following block. but basically, what happens is that instead
+# of considering data as drawings, it considers it as a selection, and show me the zoomed part of the plot, according to coordinates
+
+'''
 # --- Drawing Canvas ---
 st.sidebar.header("Drawing Tools")
 canvas_result = st_canvas(
@@ -316,6 +322,6 @@ if canvas_result.json_data is not None:
 
 # Re-display the updated Plotly chart
 st.plotly_chart(fig, key="updated_chart")
-
+'''
 
 
