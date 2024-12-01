@@ -275,7 +275,7 @@ if canvas_result.json_data is not None:
         st.write(shape)
 
 # Render the Plotly chart ONLY ONCE
-st.plotly_chart(fig, key="unique_plot")
+#st.plotly_chart(fig, key="unique_plot")
 
 
 
