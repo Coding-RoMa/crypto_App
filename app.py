@@ -90,7 +90,7 @@ if not df.empty and 'Adj Close' in df.columns:
 
 
 
-    #st.write(df.columns) # trying to change this to see if everything works
+    st.write(df.columns) # trying to change this to see if everything works
 
     # --------------------- Ensure 'Close' Column Is Retained -----------------------
 
@@ -105,7 +105,7 @@ if not df.empty and 'Adj Close' in df.columns:
     else:
         st.warning("Close column is missing from the DataFrame!")
 
-    st.write(df.columns) # trying to move this here
+    #st.write(df.columns) # trying to move this here
 
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
@@ -147,8 +147,10 @@ if not df.empty and 'Adj Close' in df.columns:
 
 
 # --------------------- DISPLAY DATAFRAME -----------------------
+# >>>> The following two lines are referred to the table with the data
 st.subheader("Historical Prices")
 st.write(df)
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 st.subheader("Data Statistics")
 st.write(df.describe())
@@ -159,7 +161,7 @@ st.write(df.describe())
 
 # --------------------- VOLUME CHART -----------------------
 st.subheader("Volume")
-#st.bar_chart(df['Price Data_Volume'])
+st.bar_chart(df['Price Data_Volume'])
 #st.bar_chart(df['Volume'])
 
 # --------------------- ADI CHART -----------------------
