@@ -182,7 +182,7 @@ df['Scaled_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (p
 
 # Display RSI data in the app
 st.subheader("RSI Data")
-st.write(df[["Price Data_Close", "Indicators_RSI"]].tail(20))  # Display the last 20 rows of Close and RSI
+st.write(df[["Price Data_Adj Close", "Indicators_RSI"]].tail(20))  # Display the last 20 rows of Close and RSI
 
 # --------------------- RSI Chart -----------------------
 st.subheader("RSI Chart")
