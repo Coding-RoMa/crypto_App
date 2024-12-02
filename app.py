@@ -42,7 +42,7 @@ df = get_data(symbol, start_date, end_date)
 
 df['Close'] = df['Close']
 
--------------------------------------------------------------------
+# -------------------------------------------------------------------
 
 if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
