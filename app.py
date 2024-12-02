@@ -110,7 +110,7 @@ if not df.empty and 'Adj Close' in df.columns:
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
         ("Price Data", "Date"),
-        ("Price Data", "Close"),
+        #("Price Data", "Close"),
         ("Price Data", "Adj Close"),
         ("Price Data", "High"),
         ("Price Data", "Low"),
