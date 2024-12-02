@@ -98,7 +98,8 @@ if not df.empty and 'Adj Close' in df.columns:
     if "Close" in df.columns:
         df["Close"] = df["Close"]  # Explicitly copy Close column to retain it
     '''
-    
+
+    '''
     if "Close" in df.columns:
         df["Close"] = df["Close"]
     else:
@@ -106,7 +107,7 @@ if not df.empty and 'Adj Close' in df.columns:
 
     st.write(df.columns) # trying to move this here
     
-    
+    '''
 
 
 
@@ -128,7 +129,7 @@ if not df.empty and 'Adj Close' in df.columns:
         ("Bollinger Bands", "Low Indicator"),
         ("Indicators", "ADI"),  # Add ADI to columns
         ("Indicators", "RSI"),  # Add RSI to columns
-        ("Price Data", "Close"),
+        #Price Data", "Close"),
    
     ]
 
