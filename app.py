@@ -32,7 +32,7 @@ def get_data(symbol, start_date, end_date):
     if symbol:
         df = yf.download(symbol, start=start_date, end=end_date)
     else:
-        df = pd.DataFrame(columns=['Date', 'Close', 'Open', 'Volume', 'Adj Close'])
+        df = pd.DataFrame(columns=['Date', 'Close', 'Open', 'Volume', 'Close']) # Replacing Adj Close with Close
     return df
 
 symbol, start_date, end_date = get_input()
@@ -40,12 +40,12 @@ df = get_data(symbol, start_date, end_date)
 
 
 
-if not df.empty and 'Adj Close' in df.columns:
+if not df.empty and 'Close' in df.columns: # Replacing Adj Close with Close
     df = dropna(df)
-    adj_close_prices = df["Adj Close"].squeeze()  
+    close_prices = df["Close"].squeeze() # Replacing Adj Close with Close
 
     # --------------------- BOLLINGER BANDS -----------------------
-    indicator_bb = BollingerBands(close=adj_close_prices, window=20, window_dev=2)
+    indicator_bb = BollingerBands(close=close_prices, window=20, window_dev=2) # Replacing Adj Close with Close
     df['bb_bbm'] = indicator_bb.bollinger_mavg()  # Middle Band
     df['bb_bbh'] = indicator_bb.bollinger_hband()  # Upper Band
     df['bb_bbl'] = indicator_bb.bollinger_lband()  # Lower Band
@@ -89,7 +89,7 @@ if not df.empty and 'Adj Close' in df.columns:
 
  
 
-    #st.write(df.columns) # trying to change this to see if everything works
+    #st.write(df.columns) # trying to change this to see if everything works - this line just shows the names of the columns on the interface
 
  
 
@@ -101,7 +101,7 @@ if not df.empty and 'Adj Close' in df.columns:
     columns = [
         ("Price Data", "Date"),
         
-        ("Price Data", "Adj Close"),
+        ("Price Data", "Close"), # Replacing Adj Close with Close
         ("Price Data", "High"),
         ("Price Data", "Low"),
         ("Price Data", "Open"),
@@ -161,8 +161,8 @@ st.line_chart(df['Indicators_ADI'])
 # Scale ADI to fit within the price range
 adi_min = df['Indicators_ADI'].min()
 adi_max = df['Indicators_ADI'].max()
-price_min = df['Price Data_Adj Close'].min()
-price_max = df['Price Data_Adj Close'].max()
+price_min = df['Price Data_Close'].min() # Replacing Adj Close with Close
+price_max = df['Price Data_Close'].max() # Replacing Adj Close with Close
 
 # Dynamically scale ADI to match the price range
 df['Scaled_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (price_max - price_min) + price_min
@@ -170,7 +170,7 @@ df['Scaled_ADI'] = ((df['Indicators_ADI'] - adi_min) / (adi_max - adi_min)) * (p
 
 # Display RSI data in the app
 st.subheader("RSI Data")
-st.write(df[["Price Data_Adj Close", "Indicators_RSI"]].tail(20))  # Display the last 20 rows of Close and RSI
+st.write(df[["Price Data_Close", "Indicators_RSI"]].tail(20))  # Display the last 20 rows of Close and RSI # Replacing Adj Close with Close
 
 # --------------------- RSI Chart -----------------------
 st.subheader("RSI Chart")
@@ -185,12 +185,12 @@ st.subheader("Historical Price Chart with Volume, Bollinger Bands, ADI, and RSI"
 # Create a Plotly figure
 fig = go.Figure()
 
-# Add Adjusted Close Price as a line
+# Add Adjusted Close Price as a line # Replacing Adj Close with Close
 fig.add_trace(go.Scatter(
     x=df.index,
-    y=df['Price Data_Adj Close'],
+    y=df['Price Data_Close'], # Replacing Adj Close with Close
     mode='lines',
-    name='Adj Close',
+    name='Close', # Replacing Adj Close with Close
     line=dict(color='blue')
 ))
 
@@ -276,7 +276,7 @@ fig.add_hline(
 )
 
 fig.update_layout(
-    title='Adjusted Close Price, Bollinger Bands, Volume, ADI, and RSI',
+    title='Close Price, Bollinger Bands, Volume, ADI, and RSI', # Replacing Adj Close with Close
     xaxis=dict(title='Date'),
     yaxis=dict(
         title='Price',
