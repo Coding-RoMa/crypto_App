@@ -38,6 +38,12 @@ def get_data(symbol, start_date, end_date):
 symbol, start_date, end_date = get_input()
 df = get_data(symbol, start_date, end_date)
 
+# ------------------------ CLOSE ---------------------------
+
+df['Close'] = df['Close']
+
+-------------------------------------------------------------------
+
 if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
     adj_close_prices = df["Adj Close"].squeeze()  
@@ -99,18 +105,18 @@ if not df.empty and 'Adj Close' in df.columns:
     if "Close" in df.columns:
         df["Close"] = df["Close"]  # Explicitly copy Close column to retain it
     '''
-
+    '''
     if "Close" in df.columns:
         df["Close"] = df["Close"]
     else:
         st.warning("Close column is missing from the DataFrame!")
 
     #st.write(df.columns) # trying to move this here
-
+    '''
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
         ("Price Data", "Date"),
-        #("Price Data", "Close"),
+        ("Price Data", "Close"),
         ("Price Data", "Adj Close"),
         ("Price Data", "High"),
         ("Price Data", "Low"),
