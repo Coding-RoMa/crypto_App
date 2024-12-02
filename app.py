@@ -307,27 +307,29 @@ st.plotly_chart(fig)
 
 # -------------------------- Want to add the news container --------------------
 
-st.subheader("News")
-
 # Fetch and display news related to the input symbol
 st.subheader(f"Latest News for {symbol}")
 
 # Get news data
 try:
+    # Ensure symbol is correctly formatted for yfinance
     ticker = yf.Ticker(symbol)  # Initialize ticker object
+    st.write(f"Fetching news for symbol: {symbol}")  # Debugging line
     news = ticker.news  # Retrieve news
+    st.write("News Data:", news)  # Debugging line
 
     # Display news in the app
     if news and len(news) > 0:
         for article in news[:5]:  # Limit to the latest 5 articles
             st.markdown(f"### [{article['title']}]({article['link']})")
-            st.markdown(f"Published on: {article['providerPublishTime']}")
-            st.write(article['publisher'])
+            st.write(f"Published by: {article['publisher']}")
+            st.write(f"Published on: {pd.to_datetime(article['providerPublishTime'], unit='s')}")
             st.write("---")
     else:
         st.write("No news articles found for this ticker.")
 except Exception as e:
     st.error(f"An error occurred while fetching news: {e}")
+
 
 
 
