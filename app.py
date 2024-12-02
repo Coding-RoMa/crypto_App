@@ -90,7 +90,7 @@ if not df.empty and 'Adj Close' in df.columns:
 
 
 
-    #st.write(df.columns)
+    st.write(df.columns) # trying to change this to see if everything works
 
     # --------------------- Ensure 'Close' Column Is Retained -----------------------
     # Place this here, right before the renaming section
