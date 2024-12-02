@@ -186,7 +186,7 @@ st.write(df[["Price Data_Adj Close", "Indicators_RSI"]].tail(20))  # Display the
 
 # --------------------- RSI Chart -----------------------
 st.subheader("RSI Chart")
-st.line_chart(df["RSI"])
+st.line_chart(df["Indicators_RSI"])
 
 
 
