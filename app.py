@@ -40,7 +40,7 @@ df = get_data(symbol, start_date, end_date)
 
 
 
-if not df.empty and 'Adj Close' in df.columns:
+if not df.empty and 'Adj Close' in df.columns and 'Close' in df.columns:
     df = dropna(df)
     adj_close_prices = df["Adj Close"].squeeze()  
 
