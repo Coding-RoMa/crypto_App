@@ -89,7 +89,7 @@ if not df.empty and 'Adj Close' in df.columns:
 
  
 
-    st.write(df.columns) # trying to change this to see if everything works
+    #st.write(df.columns) # trying to change this to see if everything works
 
  
 
