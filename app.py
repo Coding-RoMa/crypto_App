@@ -417,7 +417,6 @@ fig.add_hline(
     yref="y3"  # Reference RSI axis
 )
 
-# Update layout for dual-axis visualization (primary, secondary, and RSI axes)
 fig.update_layout(
     title='Adjusted Close Price, Bollinger Bands, Volume, ADI, and RSI',
     xaxis=dict(title='Date'),
@@ -436,12 +435,13 @@ fig.update_layout(
         range=[0, 100],  # RSI ranges from 0 to 100
         overlaying='y',  # Overlay RSI axis on the same plot
         side='right',    # Place RSI axis on the right side
-        position=1.15    # Offset RSI axis slightly to the right
+        position=0.95    # Slightly offset RSI axis to avoid overlap
     ),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     height=600,
     width=1000
 )
+
 
 # Display the combined chart
 st.plotly_chart(fig)
