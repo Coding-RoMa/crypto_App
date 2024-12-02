@@ -91,23 +91,7 @@ if not df.empty and 'Adj Close' in df.columns:
 
     st.write(df.columns) # trying to change this to see if everything works
 
-    # --------------------- Ensure 'Close' Column Is Retained -----------------------
-
-    '''
-    # Place this here, right before the renaming section
-    if "Close" in df.columns:
-        df["Close"] = df["Close"]  # Explicitly copy Close column to retain it
-    '''
-
-    '''
-    if "Close" in df.columns:
-        df["Close"] = df["Close"]
-    else:
-        st.warning("Close column is missing from the DataFrame!")
-
-    st.write(df.columns) # trying to move this here
-    
-    '''
+ 
 
 
 
@@ -133,12 +117,7 @@ if not df.empty and 'Adj Close' in df.columns:
    
     ]
 
-    '''
-    df.columns = pd.MultiIndex.from_tuples(columns)
-
-    # Flatten multi-level columns to a single level
-    df.columns = [f"{level_0}_{level_1}" if level_0 else level_1 for level_0, level_1 in df.columns]
-    '''
+   
 
     # Validate column length
     st.write(f"Expected Columns: {len(columns)}")
@@ -198,137 +177,7 @@ st.subheader("RSI Chart")
 st.line_chart(df["Indicators_RSI"])
 
 
-'''
-# --------------------- COMBINED CHART -----------------------
-st.subheader("Historical Price Chart with Volume, Bollinger Bands, and ADI")
 
-# Create a Plotly figure
-fig = go.Figure()
-
-# Add Adjusted Close Price as a line
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Price Data_Adj Close'],
-    mode='lines',
-    name='Adj Close',
-    line=dict(color='blue')
-))
-
-# Add Bollinger Bands (Middle, High, Low) as lines
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Bollinger Bands_Middle'],
-    mode='lines',
-    name='Bollinger Middle',
-    line=dict(color='orange')
-))
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Bollinger Bands_High'],
-    mode='lines',
-    name='Bollinger High',
-    line=dict(color='green')
-))
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Bollinger Bands_Low'],
-    mode='lines',
-    name='Bollinger Low',
-    line=dict(color='red')
-))
-
-# Add Volume as a bar chart (secondary Y-axis)
-fig.add_trace(go.Bar(
-    x=df.index,
-    y=df['Price Data_Volume'],
-    name='Volume',
-    marker_color='gray',
-    opacity=0.6,
-    yaxis='y2'
-))
-
-
-
-# Add ADI as a separate line
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Indicators_ADI'],
-    mode='lines',
-    name='ADI',
-    line=dict(color='purple')
-))
-
-
-
-
-
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Scaled_ADI'],  # Use scaled ADI for visualization
-    mode='lines',
-    name='Scaled ADI',
-    line=dict(color='purple', dash='dash'),
-    customdata=df['Indicators_ADI'],  # Attach original ADI values
-    hovertemplate="Date: %{x}<br>Original ADI: %{customdata}<br>Scaled ADI: %{y}<extra></extra>"
-))
-
-
-
-
-
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Indicators_RSI'],  # RSI column
-    mode='lines',
-    name='RSI',
-    line=dict(color='brown')
-))
-
-
-fig.add_hline(
-    y=70,
-    line_dash="dot",
-    line_color="red",
-    annotation_text="Overbought (70)",
-    annotation_position="top right"
-)
-
-
-fig.add_hline(
-    y=30,
-    line_dash="dot",
-    line_color="green",
-    annotation_text="Oversold (30)",
-    annotation_position="top right"
-)
-
-
-
-
-
-# Update layout for dual-axis visualization
-fig.update_layout(
-    title='Adjusted Close Price, Bollinger Bands, Volume, ADI, and RSI',
-    xaxis=dict(title='Date'),
-    yaxis=dict(
-        title='Price',
-        showgrid=True,
-        zeroline=True
-    ),
-    yaxis2=dict(
-        title='Volume',
-        overlaying='y',  # Overlay volume axis on the same plot
-        side='right'     # Display volume axis on the right side
-    ),
-    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-    height=600,
-    width=1000
-)
-
-# Display the combined chart
-st.plotly_chart(fig)
-
-'''
 
 # --------------------- COMBINED CHART -----------------------
 st.subheader("Historical Price Chart with Volume, Bollinger Bands, ADI, and RSI")
