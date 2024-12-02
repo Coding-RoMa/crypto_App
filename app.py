@@ -333,6 +333,7 @@ except Exception as e:
 
 '''
 
+import requests
 
 # Define a mapping for cryptocurrency symbols to CoinGecko IDs
 crypto_mapping = {
