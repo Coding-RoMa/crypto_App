@@ -40,10 +40,10 @@ df = get_data(symbol, start_date, end_date)
 
 if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
-    close_prices = df["Adj Close"].squeeze()  
+    adj_close_prices = df["Adj Close"].squeeze()  
 
     # --------------------- BOLLINGER BANDS -----------------------
-    indicator_bb = BollingerBands(close=close_prices, window=20, window_dev=2)
+    indicator_bb = BollingerBands(close=adj_close_prices, window=20, window_dev=2)
     df['bb_bbm'] = indicator_bb.bollinger_mavg()  # Middle Band
     df['bb_bbh'] = indicator_bb.bollinger_hband()  # Upper Band
     df['bb_bbl'] = indicator_bb.bollinger_lband()  # Lower Band
