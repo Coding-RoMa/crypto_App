@@ -120,8 +120,8 @@ if not df.empty and 'Adj Close' in df.columns:
    
 
     # Validate column length
-    st.write(f"Expected Columns: {len(columns)}")
-    st.write(f"Actual Columns: {len(df.columns)}")
+    #st.write(f"Expected Columns: {len(columns)}")
+    #st.write(f"Actual Columns: {len(df.columns)}")
 
     # Rename columns
     try:
