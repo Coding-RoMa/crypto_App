@@ -425,7 +425,7 @@ if canvas_result.image_data is not None:
     img_buffer.seek(0)
 
     # Display the updated image
-    st.image(image, caption="Canvas Drawing with Annotations", use_column_width=True)
+    st.image(image, caption="Canvas Drawing with Annotations", use_container_width=True)
 
     # Provide download button for the image
     st.download_button(
