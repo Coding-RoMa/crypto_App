@@ -189,7 +189,7 @@ st.subheader("RSI Chart")
 st.line_chart(df["Indicators_RSI"])
 
 
-
+'''
 # --------------------- COMBINED CHART -----------------------
 st.subheader("Historical Price Chart with Volume, Bollinger Bands, and ADI")
 
@@ -319,6 +319,132 @@ fig.update_layout(
 # Display the combined chart
 st.plotly_chart(fig)
 
+'''
+
+# --------------------- COMBINED CHART -----------------------
+st.subheader("Historical Price Chart with Volume, Bollinger Bands, ADI, and RSI")
+
+# Create a Plotly figure
+fig = go.Figure()
+
+# Add Adjusted Close Price as a line
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Price Data_Adj Close'],
+    mode='lines',
+    name='Adj Close',
+    line=dict(color='blue')
+))
+
+# Add Bollinger Bands (Middle, High, Low) as lines
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Bollinger Bands_Middle'],
+    mode='lines',
+    name='Bollinger Middle',
+    line=dict(color='orange')
+))
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Bollinger Bands_High'],
+    mode='lines',
+    name='Bollinger High',
+    line=dict(color='green')
+))
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Bollinger Bands_Low'],
+    mode='lines',
+    name='Bollinger Low',
+    line=dict(color='red')
+))
+
+# Add Volume as a bar chart (primary Y-axis)
+fig.add_trace(go.Bar(
+    x=df.index,
+    y=df['Price Data_Volume'],
+    name='Volume',
+    marker_color='gray',
+    opacity=0.6,
+    yaxis='y2'  # Link to secondary Y-axis for volume
+))
+
+# Add ADI as a separate line
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Indicators_ADI'],
+    mode='lines',
+    name='ADI',
+    line=dict(color='purple')
+))
+
+# Add Scaled ADI for better visualization
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Scaled_ADI'],
+    mode='lines',
+    name='Scaled ADI',
+    line=dict(color='purple', dash='dash'),
+    customdata=df['Indicators_ADI'],  # Attach original ADI values
+    hovertemplate="Date: %{x}<br>Original ADI: %{customdata}<br>Scaled ADI: %{y}<extra></extra>"
+))
+
+# Add RSI as a line
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Indicators_RSI'],
+    mode='lines',
+    name='RSI',
+    line=dict(color='brown'),
+    yaxis="y3"  # Link to tertiary Y-axis for RSI
+))
+
+# Add RSI levels as horizontal lines on the RSI Y-axis
+fig.add_hline(
+    y=70,
+    line_dash="dot",
+    line_color="red",
+    annotation_text="Overbought (70)",
+    annotation_position="top right",
+    yref="y3"  # Reference RSI axis
+)
+fig.add_hline(
+    y=30,
+    line_dash="dot",
+    line_color="green",
+    annotation_text="Oversold (30)",
+    annotation_position="bottom right",
+    yref="y3"  # Reference RSI axis
+)
+
+# Update layout for dual-axis visualization (primary, secondary, and RSI axes)
+fig.update_layout(
+    title='Adjusted Close Price, Bollinger Bands, Volume, ADI, and RSI',
+    xaxis=dict(title='Date'),
+    yaxis=dict(
+        title='Price',
+        showgrid=True,
+        zeroline=True
+    ),
+    yaxis2=dict(
+        title='Volume',
+        overlaying='y',  # Overlay volume axis on the same plot
+        side='right'     # Display volume axis on the right side
+    ),
+    yaxis3=dict(
+        title='RSI',
+        range=[0, 100],  # RSI ranges from 0 to 100
+        overlaying='y',  # Overlay RSI axis on the same plot
+        side='right',    # Place RSI axis on the right side
+        position=1.15    # Offset RSI axis slightly to the right
+    ),
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    height=600,
+    width=1000
+)
+
+# Display the combined chart
+st.plotly_chart(fig)
 
 
 
