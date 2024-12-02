@@ -38,11 +38,7 @@ def get_data(symbol, start_date, end_date):
 symbol, start_date, end_date = get_input()
 df = get_data(symbol, start_date, end_date)
 
-# ------------------------ CLOSE ---------------------------
 
-df['Close'] = df['Close']
-
-# -------------------------------------------------------------------
 
 if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
@@ -91,7 +87,11 @@ if not df.empty and 'Adj Close' in df.columns:
         df["RSI"] = rsi_indicator.rsi()
 
 
+    # ------------------------ CLOSE ---------------------------
 
+    df['Close'] = df['Close']
+
+    # -------------------------------------------------------------------
     
 
 
@@ -112,7 +112,13 @@ if not df.empty and 'Adj Close' in df.columns:
         st.warning("Close column is missing from the DataFrame!")
 
     #st.write(df.columns) # trying to move this here
+    
     '''
+
+
+
+
+    
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
         ("Price Data", "Date"),
