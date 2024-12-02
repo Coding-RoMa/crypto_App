@@ -40,7 +40,7 @@ df = get_data(symbol, start_date, end_date)
 
 
 
-if not df.empty and 'Adj Close' in df.columns and 'Close' in df.columns:
+if not df.empty and 'Adj Close' in df.columns:
     df = dropna(df)
     adj_close_prices = df["Adj Close"].squeeze()  
 
@@ -87,14 +87,7 @@ if not df.empty and 'Adj Close' in df.columns and 'Close' in df.columns:
         df["RSI"] = rsi_indicator.rsi()
 
 
-    # ------------------------ CLOSE ---------------------------
-
-    df['Close'] = df['Close']
-
-    # -------------------------------------------------------------------
-    
-
-
+ 
 
     st.write(df.columns) # trying to change this to see if everything works
 
@@ -105,15 +98,15 @@ if not df.empty and 'Adj Close' in df.columns and 'Close' in df.columns:
     if "Close" in df.columns:
         df["Close"] = df["Close"]  # Explicitly copy Close column to retain it
     '''
-    '''
+    
     if "Close" in df.columns:
         df["Close"] = df["Close"]
     else:
         st.warning("Close column is missing from the DataFrame!")
 
-    #st.write(df.columns) # trying to move this here
+    st.write(df.columns) # trying to move this here
     
-    '''
+    
 
 
 
@@ -122,7 +115,7 @@ if not df.empty and 'Adj Close' in df.columns and 'Close' in df.columns:
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
         ("Price Data", "Date"),
-        ("Price Data", "Close"),
+        
         ("Price Data", "Adj Close"),
         ("Price Data", "High"),
         ("Price Data", "Low"),
@@ -135,6 +128,7 @@ if not df.empty and 'Adj Close' in df.columns and 'Close' in df.columns:
         ("Bollinger Bands", "Low Indicator"),
         ("Indicators", "ADI"),  # Add ADI to columns
         ("Indicators", "RSI"),  # Add RSI to columns
+        ("Price Data", "Close"),
    
     ]
 
