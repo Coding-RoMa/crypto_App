@@ -90,12 +90,22 @@ if not df.empty and 'Adj Close' in df.columns:
 
 
 
-    st.write(df.columns) # trying to change this to see if everything works
+    #st.write(df.columns) # trying to change this to see if everything works
 
     # --------------------- Ensure 'Close' Column Is Retained -----------------------
+
+    '''
     # Place this here, right before the renaming section
     if "Close" in df.columns:
         df["Close"] = df["Close"]  # Explicitly copy Close column to retain it
+    '''
+
+    if "Close" in df.columns:
+        df["Close"] = df["Close"]
+    else:
+        st.warning("Close column is missing from the DataFrame!")
+
+    st.write(df.columns) # trying to move this here
 
     # --------------------- COLUMN RENAMING -----------------------
     columns = [
