@@ -384,7 +384,7 @@ st.plotly_chart(fig)
 
 
 # Fetch and display news dynamically based on the symbol
-st.subheader(f"Latest News for {symbol.upper()}")
+st.subheader(f"Latest News") #for {symbol.upper()}")
 
 try:
     if symbol.endswith("-USD"):  # Check if it's a cryptocurrency (crypto symbols typically end with "-USD")
