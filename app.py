@@ -57,7 +57,7 @@ def get_input():
     #if len(symbol.split("-")) == 1 and symbol.isalpha():  # No '-' and only letters
         #symbol = f"{symbol}-USD"  # Append '-USD' only for cryptos
     if "-" in symbol and not symbol.endswith("USD"):  # If '-' exists but 'USD' is missing
-    symbol = f"{symbol}USD"  # Append 'USD' for cryptos
+        symbol = f"{symbol}USD"  # Append 'USD' for cryptos
     #################################################################
 
     # Dropdown for period including "Custom Dates"
