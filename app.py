@@ -54,8 +54,11 @@ def get_input():
     symbol = st.sidebar.text_input("Symbol", "BTC-USD").strip().upper()
 
     # Check if the symbol looks like a cryptocurrency
-    if len(symbol.split("-")) == 1 and symbol.isalpha():  # No '-' and only letters
-        symbol = f"{symbol}-USD"  # Append '-USD' only for cryptos
+    #if len(symbol.split("-")) == 1 and symbol.isalpha():  # No '-' and only letters
+        #symbol = f"{symbol}-USD"  # Append '-USD' only for cryptos
+    if "-" in symbol and not symbol.endswith("USD"):  # If '-' exists but 'USD' is missing
+    symbol = f"{symbol}USD"  # Append 'USD' for cryptos
+    #################################################################
 
     # Dropdown for period including "Custom Dates"
     period = st.sidebar.selectbox(
