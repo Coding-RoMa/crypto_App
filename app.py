@@ -19,13 +19,25 @@ st.title("Market Dashboard Application")
 st.sidebar.header("User Input")
 
 
-
-
+# normalizing symbol in the get_input function
+'''
 def get_input():
     symbol = st.sidebar.text_input("Symbol", "BTC-USD")
     start_date = st.sidebar.date_input("Start Date", date(2021, 1, 1))
     end_date = st.sidebar.date_input("End Date", date(2021, 12, 31))
     return symbol, start_date, end_date
+'''
+
+def get_input():
+    symbol = st.sidebar.text_input("Symbol", "BTC-USD").strip().upper()
+    if not symbol.endswith("-USD"):
+        symbol = f"{symbol}-USD"  # Automatically append "-USD" if missing
+    start_date = st.sidebar.date_input("Start Date", date(2021, 1, 1))
+    end_date = st.sidebar.date_input("End Date", date(2021, 12, 31))
+    return symbol, start_date, end_date
+
+
+
 
 def get_data(symbol, start_date, end_date):
     symbol = symbol.upper()
