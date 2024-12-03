@@ -342,7 +342,7 @@ try:
     if symbol.endswith("-USD"):  # Check if it's a cryptocurrency (crypto symbols typically end with "-USD")
         # Fetch crypto news using Newsdata.io API
         api_key = "pub_611122f586a8fcd87bd13e911285ad9c31877"  # Your Newsdata.io API key
-        newsdata_url = f"https://newsdata.io/api/1/news?apikey={api_key}&q={symbol.split('-')[0]}&language=en"  # Use the base symbol (e.g., BTC)
+        newsdata_url = f"https://newsdata.io/api/1/news?apikey={api_key}&q={symbol.split('-')[0]}+crypto&language=en"  # Use the base symbol (e.g., BTC)
 
         response = requests.get(newsdata_url)
         if response.status_code == 200:
