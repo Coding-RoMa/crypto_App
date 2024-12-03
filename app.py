@@ -22,31 +22,7 @@ st.sidebar.header("User Input")
 
 
 
-'''
-# normalizing symbol in the get_input function - this version also handles cases in which the input is not a cryptocurrency
 
-def get_input():
-    symbol = st.sidebar.text_input("Symbol", "BTC-USD").strip().upper()
-
-    # Check if the symbol looks like a cryptocurrency
-    if len(symbol.split("-")) == 1 and symbol.isalpha():  # No '-' and only letters
-        symbol = f"{symbol}-USD"  # Append '-USD' only for cryptos
-
-    start_date = st.sidebar.date_input("Start Date", date(2021, 1, 1))
-    end_date = st.sidebar.date_input("End Date", date(2021, 12, 31))
-    return symbol, start_date, end_date
-
-
-
-def get_data(symbol, start_date, end_date):
-    symbol = symbol.upper()
-    if symbol:
-        df = yf.download(symbol, start=start_date, end=end_date)
-    else:
-        df = pd.DataFrame(columns=['Date', 'Close', 'Open', 'Volume', 'Close']) # Replacing Adj Close with Close
-    return df
-
-'''
 
 
 def get_input():
