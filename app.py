@@ -332,46 +332,39 @@ except Exception as e:
     st.error(f"An error occurred while fetching news: {e}")
 
 '''
-
 import requests
 
-# Define a mapping for cryptocurrency symbols to CoinGecko IDs
-crypto_mapping = {
-    "BTC-USD": "bitcoin",
-    "ETH-USD": "ethereum",
-    "DOGE-USD": "dogecoin",
-    "ADA-USD": "cardano",
-    "SOL-USD": "solana",
-    "XRP-USD": "ripple",
-}
 
 # Fetch and display news dynamically based on the symbol
 st.subheader(f"Latest News for {symbol}")
 
 try:
-    if symbol in crypto_mapping:  # Check if the symbol is a cryptocurrency
-        # Fetch news for cryptocurrencies from CoinGecko
-        coin_id = crypto_mapping[symbol]
-        crypto_news_url = f"https://api.coingecko.com/api/v3/coins/{coin_id}/status_updates"
-        response = requests.get(crypto_news_url)
+    if symbol.endswith("-USD"):  # Check if it's a cryptocurrency (crypto symbols typically end with "-USD")
+        # Fetch crypto news using Newsdata.io API
+        api_key = "pub_611122f586a8fcd87bd13e911285ad9c31877"  # Your Newsdata.io API key
+        newsdata_url = f"https://newsdata.io/api/1/news?apikey={api_key}&q={symbol.split('-')[0]}"  # Use the base symbol (e.g., BTC)
+
+        response = requests.get(newsdata_url)
         if response.status_code == 200:
             news_data = response.json()
-            if "status_updates" in news_data and len(news_data["status_updates"]) > 0:
-                for article in news_data["status_updates"][:5]:  # Display the top 5 articles
-                    st.markdown(f"### {article['title']}")
-                    st.write(article['description'])
-                    st.write(f"Published on: {article['created_at']}")
+            if "results" in news_data and len(news_data["results"]) > 0:
+                # Display the top 5 news articles
+                for article in news_data["results"][:5]:
+                    st.markdown(f"### [{article['title']}]({article['link']})")
+                    st.write(f"Published by: {article['source_id']}")
+                    st.write(f"Published on: {article['pubDate']}")
                     st.write("---")
             else:
                 st.write("No news articles found for this cryptocurrency.")
         else:
             st.error(f"Failed to fetch crypto news. Status code: {response.status_code}")
     else:
-        # Fetch news for stocks using yfinance
+        # Fetch stock news using yfinance
         ticker = yf.Ticker(symbol)
         stock_news = ticker.news
         if stock_news and len(stock_news) > 0:
-            for article in stock_news[:5]:  # Display the top 5 articles
+            # Display the top 5 news articles
+            for article in stock_news[:5]:
                 st.markdown(f"### [{article['title']}]({article['link']})")
                 st.write(f"Published by: {article['publisher']}")
                 st.write(f"Published on: {pd.to_datetime(article['providerPublishTime'], unit='s')}")
@@ -380,7 +373,6 @@ try:
             st.write("No news articles found for this stock.")
 except Exception as e:
     st.error(f"An error occurred while fetching news: {e}")
-
 
 
 
