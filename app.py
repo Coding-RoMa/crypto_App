@@ -12,6 +12,8 @@ from streamlit_drawable_canvas import st_canvas
 
 from ta.momentum import RSIIndicator
 
+import requests
+
 
 
 
@@ -20,13 +22,7 @@ st.sidebar.header("User Input")
 
 
 # normalizing symbol in the get_input function
-'''
-def get_input():
-    symbol = st.sidebar.text_input("Symbol", "BTC-USD")
-    start_date = st.sidebar.date_input("Start Date", date(2021, 1, 1))
-    end_date = st.sidebar.date_input("End Date", date(2021, 12, 31))
-    return symbol, start_date, end_date
-'''
+
 
 def get_input():
     symbol = st.sidebar.text_input("Symbol", "BTC-USD").strip().upper()
@@ -319,32 +315,10 @@ st.plotly_chart(fig)
 
 # -------------------------- Want to add the news container --------------------
 
-'''
-# Fetch and display news related to the input symbol
-st.subheader(f"Latest News for {symbol}")
+# this version doesn't have any technical mistake, but the news call with yfinance api doesn't work well when it comes to cryptos
+# so, I'll keep using yf for stocks, etc. and NewsData.io api for cryptos
 
-# Get news data
-try:
-    # Ensure symbol is correctly formatted for yfinance
-    ticker = yf.Ticker(symbol)  # Initialize ticker object
-    st.write(f"Fetching news for symbol: {symbol}")  # Debugging line
-    news = ticker.news  # Retrieve news
-    st.write("News Data:", news)  # Debugging line
 
-    # Display news in the app
-    if news and len(news) > 0:
-        for article in news[:5]:  # Limit to the latest 5 articles
-            st.markdown(f"### [{article['title']}]({article['link']})")
-            st.write(f"Published by: {article['publisher']}")
-            st.write(f"Published on: {pd.to_datetime(article['providerPublishTime'], unit='s')}")
-            st.write("---")
-    else:
-        st.write("No news articles found for this ticker.")
-except Exception as e:
-    st.error(f"An error occurred while fetching news: {e}")
-
-'''
-import requests
 
 
 # Fetch and display news dynamically based on the symbol
