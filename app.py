@@ -100,8 +100,13 @@ def get_data(symbol, period, interval, start_date=None, end_date=None):
     return df
 
 
+'''
 symbol, start_date, end_date = get_input()
 df = get_data(symbol, start_date, end_date)
+'''
+
+symbol, period, interval, start_date, end_date = get_input()
+df = get_data(symbol, period, interval, start_date, end_date)
 
 
 
