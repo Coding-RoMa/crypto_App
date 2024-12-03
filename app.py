@@ -21,6 +21,8 @@ st.title("Market Dashboard Application")
 st.sidebar.header("User Input")
 
 
+
+'''
 # normalizing symbol in the get_input function - this version also handles cases in which the input is not a cryptocurrency
 
 def get_input():
@@ -43,6 +45,60 @@ def get_data(symbol, start_date, end_date):
     else:
         df = pd.DataFrame(columns=['Date', 'Close', 'Open', 'Volume', 'Close']) # Replacing Adj Close with Close
     return df
+
+'''
+
+
+def get_input():
+    # Normalize the symbol
+    symbol = st.sidebar.text_input("Symbol", "BTC-USD").strip().upper()
+
+    # Check if the symbol looks like a cryptocurrency
+    if len(symbol.split("-")) == 1 and symbol.isalpha():  # No '-' and only letters
+        symbol = f"{symbol}-USD"  # Append '-USD' only for cryptos
+
+    # Dropdown for period including "Custom Dates"
+    period = st.sidebar.selectbox(
+        "Choose a period or custom dates:",
+        ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max', 'Custom Dates'],
+        index=4  # Default to '6mo'
+    )
+
+    # Default to None for custom dates
+    start_date, end_date = None, None
+
+    # If "Custom Dates" is selected, show start and end date pickers
+    if period == "Custom Dates":
+        start_date = st.sidebar.date_input("Start Date", date(2021, 1, 1))
+        end_date = st.sidebar.date_input("End Date", date(2021, 12, 31))
+
+    # Dropdown for interval
+    interval = st.sidebar.selectbox(
+        "Choose an interval:",
+        ['1m', '2m', '5m', '15m', '30m', '60m', '90m', '1h', '1d', '5d', '1wk', '1mo', '3mo'],
+        index=8  # Default to '1d'
+    )
+
+    return symbol, period, interval, start_date, end_date
+
+
+def get_data(symbol, period, interval, start_date=None, end_date=None):
+    symbol = symbol.upper()
+
+    # Handle data fetching based on the selected period or custom dates
+    if period != "Custom Dates":
+        # Fetch data using period and interval
+        df = yf.download(tickers=symbol, period=period, interval=interval)
+    else:
+        # Fetch data using start and end dates
+        df = yf.download(tickers=symbol, start=start_date, end=end_date, interval=interval)
+
+    # Handle case where no data is returned
+    if df.empty:
+        df = pd.DataFrame(columns=['Date', 'Close', 'Open', 'Volume', 'Adj Close'])
+
+    return df
+
 
 symbol, start_date, end_date = get_input()
 df = get_data(symbol, start_date, end_date)
