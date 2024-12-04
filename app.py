@@ -650,7 +650,7 @@ fig.update_layout(
 
 
 fig.update_layout(
-    title='Close Price, Bollinger Bands, Volume, ADI, RSI, and MACD',  # Updated title to reflect all included indicators
+    title= 'Chart', #'Close Price, Bollinger Bands, Volume, ADI, RSI, and MACD',  # Updated title to reflect all included indicators
     xaxis=dict(title='Date'),
     yaxis=dict(
         title='Price',
@@ -679,7 +679,7 @@ fig.update_layout(
     ),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     
-    height=900,
+    height=700,
     width=1000
 )
 
