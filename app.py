@@ -395,14 +395,14 @@ fig.add_hline(
 )
 
 
-
 # Add MACD Line to Combined Chart
 fig.add_trace(go.Scatter(
     x=df.index,
     y=df["MACD_MACD Line"],
     mode='lines',
     name="MACD Line",
-    line=dict(color='blue', dash="dot")
+    line=dict(color='blue', dash="dot"),
+    yaxis="y3"  # Use a third axis for MACD
 ))
 
 # Add Signal Line to Combined Chart
@@ -411,12 +411,45 @@ fig.add_trace(go.Scatter(
     y=df["MACD_Signal Line"],
     mode='lines',
     name="Signal Line",
-    line=dict(color='orange', dash="dash")
+    line=dict(color='orange', dash="dash"),
+    yaxis="y3"  # Use a third axis for MACD
+))
+
+# Add MACD Histogram to Combined Chart
+fig.add_trace(go.Bar(
+    x=df.index,
+    y=df["MACD_Histogram"],
+    name="MACD Histogram",
+    marker_color="green",
+    opacity=0.6,
+    yaxis="y3"  # Use a third axis for MACD
 ))
 
 
 
 
+
+'''
+
+#specific part for MACD
+# Update layout for the third axis
+fig.update_layout(
+    yaxis3=dict(
+        title="MACD",
+        overlaying="y",  # Overlay it on the same plot
+        side="right",    # Place it on the right
+        position=1.15    # Adjust spacing to separate it from other axes
+    )
+)
+
+'''
+
+
+
+
+
+'''
+#version before macd
 fig.update_layout(
     title='Close Price, Bollinger Bands, Volume, ADI, and RSI', # Replacing Adj Close with Close
     xaxis=dict(title='Date'),
@@ -441,6 +474,39 @@ fig.update_layout(
     height=600,
     width=1000
 )
+'''
+
+fig.update_layout(
+    title='Close Price, Bollinger Bands, Volume, ADI, and RSI',  # Replacing Adj Close with Close
+    xaxis=dict(title='Date'),
+    yaxis=dict(
+        title='Price',
+        showgrid=True,
+        zeroline=True
+    ),
+    yaxis2=dict(
+        title='Volume',
+        overlaying='y',  # Overlay volume axis on the same plot
+        side='right'     # Display volume axis on the right side
+    ),
+    yaxis3=dict(
+        title='RSI',
+        range=[0, 100],  # RSI ranges from 0 to 100
+        overlaying='y',  # Overlay RSI axis on the same plot
+        side='right',    # Place RSI axis on the right side
+        position=0.95    # Slightly offset RSI axis to avoid overlap
+    ),
+    yaxis4=dict(
+        title="MACD",       # Title for MACD axis
+        overlaying="y",     # Overlay it on the same plot
+        side="right",       # Place it on the right
+        position=1.15       # Offset it further to the right
+    ),
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    height=600,
+    width=1000
+)
+
 
 
 # Display the combined chart
