@@ -9,3 +9,4 @@ plotly
 numpy>=1.24.0
 streamlit_drawable_canvas
 requests
+xgboost
