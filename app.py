@@ -30,8 +30,7 @@ def get_input():
     symbol = st.sidebar.text_input("Symbol", "BTC-USD").strip().upper()
 
     # Check if the symbol looks like a cryptocurrency
-    #if len(symbol.split("-")) == 1 and symbol.isalpha():  # No '-' and only letters
-        #symbol = f"{symbol}-USD"  # Append '-USD' only for cryptos
+    
     if "-" in symbol and not symbol.endswith("USD"):  # If '-' exists but 'USD' is missing
         symbol = f"{symbol}USD"  # Append 'USD' for cryptos
     #################################################################
@@ -79,10 +78,7 @@ def get_data(symbol, period, interval, start_date=None, end_date=None):
     return df
 
 
-'''
-symbol, start_date, end_date = get_input()
-df = get_data(symbol, start_date, end_date)
-'''
+
 
 symbol, period, interval, start_date, end_date = get_input()
 df = get_data(symbol, period, interval, start_date, end_date)
@@ -136,13 +132,6 @@ if not df.empty and 'Close' in df.columns: # Replacing Adj Close with Close
         df["RSI"] = rsi_indicator.rsi()
 
 
- 
-
-    #st.write(df.columns) # trying to change this to see if everything works - this line just shows the names of the columns on the interface
-
- 
-
-
 # --------------------- MACD (Moving Average Convergence Divergence) -----------------------
 
 
@@ -184,18 +173,12 @@ if not df.empty and 'Close' in df.columns: # Replacing Adj Close with Close
         ("Bollinger Bands", "Low Indicator"),
         ("Indicators", "ADI"),  # Add ADI to columns
         ("Indicators", "RSI"),  # Add RSI to columns
-        #Price Data", "Close"),
         ("MACD", "MACD Line"),  # MACD line
         ("MACD", "Signal Line"),  # Signal line
         ("MACD", "Histogram"),  # MACD Histogram
    
     ]
 
-   
-
-    # Validate column length
-    #st.write(f"Expected Columns: {len(columns)}")
-    #st.write(f"Actual Columns: {len(df.columns)}")
 
     # Rename columns
     try:
@@ -215,9 +198,6 @@ st.write(df)
 st.subheader("Data Statistics")
 st.write(df.describe())
 
-## --------------------- PRICE CHART -----------------------
-#st.subheader("Historical Price Chart - Adjusted Close Price")
-#st.line_chart(df[['Price Data_Close', 'Price Data_Adj Close', 'Bollinger Bands_Middle', 'Bollinger Bands_High', 'Bollinger Bands_Low']])
 
 # --------------------- VOLUME CHART -----------------------
 st.subheader("Volume")
@@ -297,136 +277,6 @@ fig_macd.update_layout(
 st.plotly_chart(fig_macd)
 
 
-
-'''
-# --------------------- COMBINED CHART -----------------------
-st.subheader("Historical Price Chart with Volume, Bollinger Bands, ADI, and RSI")
-
-# Create a Plotly figure
-fig = go.Figure()
-
-# Add Adjusted Close Price as a line # Replacing Adj Close with Close
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Price Data_Close'], # Replacing Adj Close with Close
-    mode='lines',
-    name='Close', # Replacing Adj Close with Close
-    line=dict(color='blue')
-))
-
-# Add Bollinger Bands (Middle, High, Low) as lines
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Bollinger Bands_Middle'],
-    mode='lines',
-    name='Bollinger Middle',
-    line=dict(color='orange')
-))
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Bollinger Bands_High'],
-    mode='lines',
-    name='Bollinger High',
-    line=dict(color='green')
-))
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Bollinger Bands_Low'],
-    mode='lines',
-    name='Bollinger Low',
-    line=dict(color='red')
-))
-
-# Add Volume as a bar chart (primary Y-axis)
-fig.add_trace(go.Bar(
-    x=df.index,
-    y=df['Price Data_Volume'],
-    name='Volume',
-    marker_color='gray',
-    opacity=0.6,
-    yaxis='y2'  # Link to secondary Y-axis for volume
-))
-
-# Add ADI as a separate line
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Indicators_ADI'],
-    mode='lines',
-    name='ADI',
-    line=dict(color='purple')
-))
-
-# Add Scaled ADI for better visualization
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Scaled_ADI'],
-    mode='lines',
-    name='Scaled ADI',
-    line=dict(color='purple', dash='dash'),
-    customdata=df['Indicators_ADI'],  # Attach original ADI values
-    hovertemplate="Date: %{x}<br>Original ADI: %{customdata}<br>Scaled ADI: %{y}<extra></extra>"
-))
-
-# Add RSI as a line
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Indicators_RSI'],
-    mode='lines',
-    name='RSI',
-    line=dict(color='brown'),
-    yaxis="y3"  # Link to tertiary Y-axis for RSI
-))
-
-# Add RSI levels as horizontal lines on the RSI Y-axis
-fig.add_hline(
-    y=70,
-    line_dash="dot",
-    line_color="red",
-    annotation_text="Overbought (70)",
-    annotation_position="top right",
-    yref="y3"  # Reference RSI axis
-)
-fig.add_hline(
-    y=30,
-    line_dash="dot",
-    line_color="green",
-    annotation_text="Oversold (30)",
-    annotation_position="bottom right",
-    yref="y3"  # Reference RSI axis
-)
-
-
-# Add MACD Line to Combined Chart
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df["MACD_MACD Line"],
-    mode='lines',
-    name="MACD Line",
-    line=dict(color='blue', dash="dot"),
-    yaxis="y3"  # Use a third axis for MACD
-))
-
-# Add Signal Line to Combined Chart
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df["MACD_Signal Line"],
-    mode='lines',
-    name="Signal Line",
-    line=dict(color='orange', dash="dash"),
-    yaxis="y3"  # Use a third axis for MACD
-))
-
-# Add MACD Histogram to Combined Chart
-fig.add_trace(go.Bar(
-    x=df.index,
-    y=df["MACD_Histogram"],
-    name="MACD Histogram",
-    marker_color="green",
-    opacity=0.6,
-    yaxis="y3"  # Use a third axis for MACD
-))
-
-'''
 
 
 # --------------------- COMBINED CHART -----------------------
@@ -560,94 +410,6 @@ fig.add_trace(go.Scatter(
 
 #####################################################################
 
-'''
-
-#specific part for MACD
-# Update layout for the third axis
-fig.update_layout(
-    yaxis3=dict(
-        title="MACD",
-        overlaying="y",  # Overlay it on the same plot
-        side="right",    # Place it on the right
-        position=1.15    # Adjust spacing to separate it from other axes
-    )
-)
-
-'''
-
-
-
-
-
-'''
-#version before macd
-fig.update_layout(
-    title='Close Price, Bollinger Bands, Volume, ADI, and RSI', # Replacing Adj Close with Close
-    xaxis=dict(title='Date'),
-    yaxis=dict(
-        title='Price',
-        showgrid=True,
-        zeroline=True
-    ),
-    yaxis2=dict(
-        title='Volume',
-        overlaying='y',  # Overlay volume axis on the same plot
-        side='right'     # Display volume axis on the right side
-    ),
-    yaxis3=dict(
-        title='RSI',
-        range=[0, 100],  # RSI ranges from 0 to 100
-        overlaying='y',  # Overlay RSI axis on the same plot
-        side='right',    # Place RSI axis on the right side
-        position=0.95    # Slightly offset RSI axis to avoid overlap
-    ),
-    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-    height=600,
-    width=1000
-)
-'''
-
-
-
-
-'''
-fig.update_layout(
-    title='Close Price, Bollinger Bands, Volume, ADI, and RSI',  # Replacing Adj Close with Close
-    xaxis=dict(title='Date'),
-    yaxis=dict(
-        title='Price',
-        showgrid=True,
-        zeroline=True
-    ),
-    yaxis2=dict(
-        title='Volume',
-        overlaying='y',  # Overlay volume axis on the same plot
-        side='right'     # Display volume axis on the right side
-    ),
-    yaxis3=dict(
-        title='RSI',
-        range=[0, 100],  # RSI ranges from 0 to 100
-        overlaying='y',  # Overlay RSI axis on the same plot
-        side='right',    # Place RSI axis on the right side
-        anchor="free",   # Free anchor to avoid conflicts
-        position=0.92    # Slightly offset RSI axis to avoid overlap
-    ),
-    yaxis4=dict(
-        title="MACD",       # Title for MACD axis
-        overlaying="y",     # Overlay it on the same plot
-        side="right",       # Place it on the right
-        anchor="free",      # Free anchor for independent positioning
-        position=0.98       # Offset it to the right within valid range
-    ),
-    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-    height=600,
-    width=1000
-)
-
-'''
-
-
-
 
 fig.update_layout(
     title= 'Chart', #'Close Price, Bollinger Bands, Volume, ADI, RSI, and MACD',  # Updated title to reflect all included indicators
@@ -691,11 +453,6 @@ st.plotly_chart(fig)
 
 
 # -------------------------- Want to add the news container --------------------
-
-# this version doesn't have any technical mistake, but the news call with yfinance api doesn't work well when it comes to cryptos
-# so, I'll keep using yf for stocks, etc. and NewsData.io api for cryptos
-
-
 
 
 # Fetch and display news dynamically based on the symbol
