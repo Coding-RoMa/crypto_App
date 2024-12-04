@@ -509,6 +509,7 @@ fig.update_layout(
 
 
 
+
 # Display the combined chart
 st.plotly_chart(fig)
 
