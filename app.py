@@ -14,7 +14,7 @@ from ta.momentum import RSIIndicator
 
 import requests
 
-
+from ta.trend import MACD
 
 
 st.title("Market Dashboard Application")
@@ -143,6 +143,28 @@ if not df.empty and 'Close' in df.columns: # Replacing Adj Close with Close
  
 
 
+# --------------------- MACD (Moving Average Convergence Divergence) -----------------------
+
+
+
+    if "Close" in df.columns:
+        close = df["Close"].squeeze()  # Ensure it's a 1D pandas Series
+
+        # Add MACD Parameters to the Sidebar
+        macd_fast = st.sidebar.slider("MACD Fast Window", min_value=5, max_value=50, value=12, step=1)
+        macd_slow = st.sidebar.slider("MACD Slow Window", min_value=10, max_value=100, value=26, step=1)
+        macd_signal = st.sidebar.slider("MACD Signal Window", min_value=5, max_value=30, value=9, step=1)
+        fillna_option = st.sidebar.checkbox("Fill NaN values in MACD", value=False)
+
+        # Calculate MACD using the ta library
+        macd_indicator = MACD(close=close, window_slow=macd_slow, window_fast=macd_fast, window_sign=macd_signal, fillna=fillna_option)
+
+        # Add MACD values to the DataFrame
+        df["MACD_Line"] = macd_indicator.macd()
+        df["MACD_Signal"] = macd_indicator.macd_signal()
+        df["MACD_Histogram"] = macd_indicator.macd_diff()
+
+
 
 
     
@@ -163,6 +185,9 @@ if not df.empty and 'Close' in df.columns: # Replacing Adj Close with Close
         ("Indicators", "ADI"),  # Add ADI to columns
         ("Indicators", "RSI"),  # Add RSI to columns
         #Price Data", "Close"),
+        ("MACD", "MACD Line"),  # MACD line
+        ("MACD", "Signal Line"),  # Signal line
+        ("MACD", "Histogram"),  # MACD Histogram
    
     ]
 
@@ -224,6 +249,51 @@ st.write(df[["Price Data_Close", "Indicators_RSI"]].tail(20))  # Display the las
 # --------------------- RSI Chart -----------------------
 st.subheader("RSI Chart")
 st.line_chart(df["Indicators_RSI"])
+
+
+# --------------------- MACD Chart -----------------------
+st.subheader("MACD Chart")
+fig_macd = go.Figure()
+
+# Add MACD Line
+fig_macd.add_trace(go.Scatter(
+    x=df.index,
+    y=df["MACD_MACD Line"],
+    mode='lines',
+    name="MACD Line",
+    line=dict(color='blue')
+))
+
+# Add Signal Line
+fig_macd.add_trace(go.Scatter(
+    x=df.index,
+    y=df["MACD_Signal Line"],
+    mode='lines',
+    name="Signal Line",
+    line=dict(color='orange')
+))
+
+# Add Histogram (Bar Chart)
+fig_macd.add_trace(go.Bar(
+    x=df.index,
+    y=df["MACD_Histogram"],
+    name="MACD Histogram",
+    marker_color="green",
+    opacity=0.5
+))
+
+# Update layout
+fig_macd.update_layout(
+    title="MACD Chart",
+    xaxis_title="Date",
+    yaxis_title="MACD",
+    height=400,
+    width=1000,
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+)
+
+# Display the MACD chart
+st.plotly_chart(fig_macd)
 
 
 
@@ -323,6 +393,29 @@ fig.add_hline(
     annotation_position="bottom right",
     yref="y3"  # Reference RSI axis
 )
+
+
+
+# Add MACD Line to Combined Chart
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df["MACD_MACD Line"],
+    mode='lines',
+    name="MACD Line",
+    line=dict(color='blue', dash="dot")
+))
+
+# Add Signal Line to Combined Chart
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df["MACD_Signal Line"],
+    mode='lines',
+    name="Signal Line",
+    line=dict(color='orange', dash="dash")
+))
+
+
+
 
 fig.update_layout(
     title='Close Price, Bollinger Bands, Volume, ADI, and RSI', # Replacing Adj Close with Close
