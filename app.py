@@ -677,18 +677,9 @@ fig.update_layout(
         anchor="free",      # Free anchor for independent positioning
         position=0.92       # Offset it to the right within the valid range
     ),
-    ##legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-    legend=dict(
-        orientation="v",  # Change orientation to vertical
-        xanchor="right",  # Anchor legend to the right
-        x=1.05,           # Position legend slightly outside the chart
-        yanchor="top",    # Anchor legend to the top
-        y=1.0,            # Align legend at the top
-        bgcolor="rgba(255, 255, 255, 0.8)",  # Add a semi-transparent background for better readability
-        bordercolor="black",  # Add a border for clarity
-        borderwidth=1       # Border thickness
-    ),
-    height=600,
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    
+    height=900,
     width=1000
 )
 
