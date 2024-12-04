@@ -494,18 +494,21 @@ fig.update_layout(
         range=[0, 100],  # RSI ranges from 0 to 100
         overlaying='y',  # Overlay RSI axis on the same plot
         side='right',    # Place RSI axis on the right side
-        position=0.95    # Slightly offset RSI axis to avoid overlap
+        anchor="free",   # Free anchor to avoid conflicts
+        position=0.92    # Slightly offset RSI axis to avoid overlap
     ),
     yaxis4=dict(
         title="MACD",       # Title for MACD axis
         overlaying="y",     # Overlay it on the same plot
         side="right",       # Place it on the right
-        position=1.15       # Offset it further to the right
+        anchor="free",      # Free anchor for independent positioning
+        position=0.98       # Offset it to the right within valid range
     ),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     height=600,
     width=1000
 )
+
 
 
 
