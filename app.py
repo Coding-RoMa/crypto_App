@@ -297,7 +297,7 @@ st.plotly_chart(fig_macd)
 
 
 
-
+'''
 # --------------------- COMBINED CHART -----------------------
 st.subheader("Historical Price Chart with Volume, Bollinger Bands, ADI, and RSI")
 
@@ -425,9 +425,139 @@ fig.add_trace(go.Bar(
     yaxis="y3"  # Use a third axis for MACD
 ))
 
+'''
 
 
+# --------------------- COMBINED CHART -----------------------
+st.subheader("Historical Price Chart with Volume, Bollinger Bands, ADI, RSI, and MACD")
 
+# Create a Plotly figure
+fig = go.Figure()
+
+# Add Close Price as a line
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Price Data_Close'],  # Replacing Adj Close with Close
+    mode='lines',
+    name='Close',  # Replacing Adj Close with Close
+    line=dict(color='blue')
+))
+
+# Add Bollinger Bands (Middle, High, Low) as lines
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Bollinger Bands_Middle'],
+    mode='lines',
+    name='Bollinger Middle',
+    line=dict(color='orange')
+))
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Bollinger Bands_High'],
+    mode='lines',
+    name='Bollinger High',
+    line=dict(color='green')
+))
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Bollinger Bands_Low'],
+    mode='lines',
+    name='Bollinger Low',
+    line=dict(color='red')
+))
+
+# Add Volume as a bar chart (secondary Y-axis)
+fig.add_trace(go.Bar(
+    x=df.index,
+    y=df['Price Data_Volume'],
+    name='Volume',
+    marker_color='gray',
+    opacity=0.6,
+    yaxis='y2'  # Link to secondary Y-axis for volume
+))
+
+# Add ADI as a separate line
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Indicators_ADI'],
+    mode='lines',
+    name='ADI',
+    line=dict(color='purple')
+))
+
+# Add Scaled ADI for better visualization
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Scaled_ADI'],
+    mode='lines',
+    name='Scaled ADI',
+    line=dict(color='purple', dash='dash'),
+    customdata=df['Indicators_ADI'],  # Attach original ADI values
+    hovertemplate="Date: %{x}<br>Original ADI: %{customdata}<br>Scaled ADI: %{y}<extra></extra>"
+))
+
+# Add RSI as a line
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df['Indicators_RSI'],
+    mode='lines',
+    name='RSI',
+    line=dict(color='brown'),
+    yaxis="y3"  # Link to tertiary Y-axis for RSI
+))
+
+# Add RSI levels as horizontal lines on the RSI Y-axis
+fig.add_hline(
+    y=70,
+    line_dash="dot",
+    line_color="red",
+    annotation_text="Overbought (70)",
+    annotation_position="top right",
+    yref="y3"  # Reference RSI axis
+)
+fig.add_hline(
+    y=30,
+    line_dash="dot",
+    line_color="green",
+    annotation_text="Oversold (30)",
+    annotation_position="bottom right",
+    yref="y3"  # Reference RSI axis
+)
+
+# Add MACD Line to Combined Chart
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df["MACD_MACD Line"],
+    mode='lines',
+    name="MACD Line",
+    line=dict(color='blue', dash="dot"),
+    yaxis="y4"  # Use a fourth axis for MACD
+))
+
+# Add Signal Line to Combined Chart
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df["MACD_Signal Line"],
+    mode='lines',
+    name="Signal Line",
+    line=dict(color='orange', dash="dash"),
+    yaxis="y4"  # Use a fourth axis for MACD
+))
+
+# Add MACD Histogram to Combined Chart (as a filled area)
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df["MACD_Histogram"],
+    mode='lines',
+    fill='tozeroy',  # Fill area to zero
+    name="MACD Histogram",
+    line=dict(color="green"),
+    opacity=0.3,
+    yaxis="y4"  # Use a fourth axis for MACD
+))
+
+
+#####################################################################
 
 '''
 
@@ -476,6 +606,10 @@ fig.update_layout(
 )
 '''
 
+
+
+
+'''
 fig.update_layout(
     title='Close Price, Bollinger Bands, Volume, ADI, and RSI',  # Replacing Adj Close with Close
     xaxis=dict(title='Date'),
@@ -509,6 +643,43 @@ fig.update_layout(
     width=1000
 )
 
+'''
+
+
+
+
+fig.update_layout(
+    title='Close Price, Bollinger Bands, Volume, ADI, RSI, and MACD',  # Updated title to reflect all included indicators
+    xaxis=dict(title='Date'),
+    yaxis=dict(
+        title='Price',
+        showgrid=True,
+        zeroline=True
+    ),
+    yaxis2=dict(
+        title='Volume',
+        overlaying='y',  # Overlay volume axis on the same plot
+        side='right'     # Display volume axis on the right side
+    ),
+    yaxis3=dict(
+        title='RSI',
+        range=[0, 100],  # RSI ranges from 0 to 100
+        overlaying='y',  # Overlay RSI axis on the same plot
+        side='right',    # Place RSI axis on the right side
+        anchor="free",   # Free anchor to avoid conflicts
+        position=0.85    # Slightly offset RSI axis to avoid overlap
+    ),
+    yaxis4=dict(
+        title="MACD",       # Title for MACD axis
+        overlaying="y",     # Overlay it on the same plot
+        side="right",       # Place it on the right
+        anchor="free",      # Free anchor for independent positioning
+        position=0.92       # Offset it to the right within the valid range
+    ),
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    height=600,
+    width=1000
+)
 
 
 
