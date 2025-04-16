@@ -327,25 +327,23 @@ fig.add_trace(go.Bar(
     yaxis='y2'  # Link to secondary Y-axis for volume
 ))
 
-# Add ADI as a separate line
+
+##############################
+# Add ADI as a separate line (on a secondary y-axis)
 fig.add_trace(go.Scatter(
     x=df.index,
     y=df['Indicators_ADI'],
     mode='lines',
     name='ADI',
-    line=dict(color='purple')
+    line=dict(color='purple'),
+    yaxis='y5'  # Assigning ADI to a new y-axis
 ))
 
-# Add Scaled ADI for better visualization
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df['Scaled_ADI'],
-    mode='lines',
-    name='Scaled ADI',
-    line=dict(color='purple', dash='dash'),
-    customdata=df['Indicators_ADI'],  # Attach original ADI values
-    hovertemplate="Date: %{x}<br>Original ADI: %{customdata}<br>Scaled ADI: %{y}<extra></extra>"
-))
+#################################
+
+
+
+
 
 # Add RSI as a line
 fig.add_trace(go.Scatter(
@@ -439,6 +437,21 @@ fig.update_layout(
         anchor="free",      # Free anchor for independent positioning
         position=0.92       # Offset it to the right within the valid range
     ),
+
+    #################################
+    
+    # Define this new y-axis in the layout:
+
+    yaxis5=dict(
+        title='ADI',
+        overlaying='y',
+        anchor='free',
+        side='right',
+        position=0.98  # Adjust to avoid overlap
+    )
+
+    ###########################
+    
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     
     height=700,
