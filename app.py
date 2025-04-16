@@ -468,29 +468,29 @@ st.plotly_chart(fig)
 # -------------------------- Want to add the news container --------------------
 
 
-# Fetch and display news dynamically based on the symbol
-st.subheader(f"Latest News") #for {symbol.upper()}")
+
+import feedparser
+
+st.subheader(f"Latest News for {symbol.upper()}")
 
 try:
-    if symbol.endswith("-USD"):  # Check if it's a cryptocurrency (crypto symbols typically end with "-USD")
-        # Fetch crypto news using Newsdata.io API
-        api_key = "pub_611122f586a8fcd87bd13e911285ad9c31877"  # Your Newsdata.io API key
-        newsdata_url = f"https://newsdata.io/api/1/news?apikey={api_key}&q={symbol.split('-')[0]}+crypto&language=en"  # Use the base symbol (e.g., BTC)
+    if symbol.endswith("-USD"):  # Cryptocurrency news from Google News RSS feed
+        crypto_name = symbol.split('-')[0]  # e.g., BTC, ETH
+        rss_url = f"https://news.google.com/rss/search?q={crypto_name}+crypto&hl=en-US&gl=US&ceid=US:en"
 
-        response = requests.get(newsdata_url)
-        if response.status_code == 200:
-            news_data = response.json()
-            if "results" in news_data and len(news_data["results"]) > 0:
-                # Display the top 5 news articles
-                for article in news_data["results"][:5]:
-                    st.markdown(f"### [{article['title']}]({article['link']})")
-                    st.write(f"Published by: {article['source_id']}")
-                    st.write(f"Published on: {article['pubDate']}")
-                    st.write("---")
-            else:
-                st.write("No news articles found for this cryptocurrency.")
+        news_feed = feedparser.parse(rss_url)
+
+        if news_feed.entries:
+            # Display the top 5 news articles
+            for entry in news_feed.entries[:5]:
+                st.markdown(f"### [{entry.title}]({entry.link})")
+                st.write(f"Published on: {entry.published}")
+                st.write("---")
         else:
-            st.error(f"Failed to fetch crypto news. Status code: {response.status_code}")
+            st.write("No news articles found for this cryptocurrency.")
+
+
+
     else:
         # Fetch stock news using yfinance
         ticker = yf.Ticker(symbol)
