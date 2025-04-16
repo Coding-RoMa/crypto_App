@@ -448,7 +448,7 @@ fig.update_layout(
         anchor='free',
         side='right',
         position=0.98  # Adjust to avoid overlap
-    )
+    ),
 
     ###########################
     
